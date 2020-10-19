@@ -1,2 +1,6 @@
-Single/Library/
 Single/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache
+Single/Library/Artifacts/
+Single/Library/ShaderCache/
+Single/.vs/
+Single/Library/
+Single/Logs/Packages-Update.log
