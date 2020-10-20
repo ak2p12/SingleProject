@@ -11,19 +11,26 @@ public class FollowCamera : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(UpdateCoroutine());
+        //StartCoroutine(UpdateCoroutine());
     }
-    IEnumerator UpdateCoroutine()
+    private void LateUpdate()
     {
-        while (true)
-        {
-            //transform.position = Vector3.Lerp(
-            //    TargetTransform.position,
-            //    transform.position,
-            //    );
-            yield return null;
-        }
+        transform.position = Vector3.Lerp(
+                transform.position,
+                TargetTransform.position + (Vector3.back * Distance) + (Vector3.up * Height),
+                Time.deltaTime * Soft);
+
+        transform.LookAt(TargetTransform);
     }
+
+    //IEnumerator UpdateCoroutine()
+    //{
+    //    while (true)
+    //    {
+            
+    //        yield return null;
+    //    }
+    //}
 
     //void Update()
     //{
