@@ -5,10 +5,12 @@ using UnityEngine;
 public class UserController : MonoBehaviour
 {
     private UserMain userMain;
+    private Camera userCamera;
 
     void Start()
     {
         userMain = GetComponent<UserMain>();
+        userCamera = GameObject.Find("UserCamera").GetComponent<Camera>();
         StartCoroutine(Input_Coroutine());
     }
 
@@ -41,10 +43,11 @@ public class UserController : MonoBehaviour
                     Space.World);
             }
 
-            S
-
+            Vector3 mousePos = Input.mousePosition;
+            Debug.Log(userCamera.ScreenPointToRay(mousePos).ToString());
 
             yield return null;
         }
     }
 }
+//asd

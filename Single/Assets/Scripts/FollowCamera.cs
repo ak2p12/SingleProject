@@ -11,7 +11,7 @@ public class FollowCamera : MonoBehaviour
 
     void Start()
     {
-        //StartCoroutine(UpdateCoroutine());
+
     }
     private void LateUpdate()
     {
@@ -22,18 +22,4 @@ public class FollowCamera : MonoBehaviour
 
         transform.LookAt(TargetTransform);
     }
-
-    //IEnumerator UpdateCoroutine()
-    //{
-    //    while (true)
-    //    {
-            
-    //        yield return null;
-    //    }
-    //}
-
-    //void Update()
-    //{
-        
-    //}
 }
