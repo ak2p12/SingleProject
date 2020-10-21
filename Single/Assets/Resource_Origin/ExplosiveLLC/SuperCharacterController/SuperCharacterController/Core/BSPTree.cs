@@ -8,7 +8,8 @@ using System.Collections.Generic;
 /// point
 /// </summary>
 [RequireComponent(typeof(MeshCollider))]
-public class BSPTree : MonoBehaviour {
+public class BSPTree : MonoBehaviour
+{
 
     [SerializeField]
     bool drawMeshTreeOnStart;
