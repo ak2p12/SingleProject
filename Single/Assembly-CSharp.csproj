@@ -93,6 +93,7 @@
     <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\DebugDraw.cs" />
     <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Math3d.cs" />
     <Compile Include="Assets\Scripts\FollowCamera.cs" />
+    <Compile Include="Assets\Scripts\GlobalEnum.cs" />
     <Compile Include="Assets\Scripts\GlobalStruct.cs" />
     <Compile Include="Assets\Scripts\ManagerRule.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
