@@ -74,11 +74,7 @@ public class UserController : MonoBehaviour
                             Debug.Log("W + A");
                             transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                            if (axisX > 0)
-                                axisX -= axisComeback * Time.deltaTime;
-                            else if (axisX < 0)
-                                axisX += axisComeback * Time.deltaTime;
-
+                            axisX -= axisComeback * Time.deltaTime;
                             axisZ += axisComeback * Time.deltaTime;
 
                         }
@@ -87,11 +83,7 @@ public class UserController : MonoBehaviour
                             Debug.Log("W + D");
                             transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                            if (axisX > 0)
-                                axisX -= axisComeback * Time.deltaTime;
-                            else if (axisX < 0)
-                                axisX += axisComeback * Time.deltaTime;
-
+                            axisX += axisComeback * Time.deltaTime;
                             axisZ += axisComeback * Time.deltaTime;
 
                         }
@@ -115,11 +107,7 @@ public class UserController : MonoBehaviour
                             Debug.Log("S + A");
                             transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                            if (axisX > 0)
-                                axisX -= axisComeback * Time.deltaTime;
-                            else if (axisX < 0)
-                                axisX += axisComeback * Time.deltaTime;
-
+                            axisX -= axisComeback * Time.deltaTime;
                             axisZ -= axisComeback * Time.deltaTime;
 
                         }
@@ -128,11 +116,7 @@ public class UserController : MonoBehaviour
                             Debug.Log("S + D");
                             transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                            if (axisX > 0)
-                                axisX -= axisComeback * Time.deltaTime;
-                            else if (axisX < 0)
-                                axisX += axisComeback * Time.deltaTime;
-
+                            axisX += axisComeback * Time.deltaTime;
                             axisZ -= axisComeback * Time.deltaTime;
                         }
                         else
@@ -262,63 +246,87 @@ public class UserController : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ += 3 * Time.deltaTime;
-                        if (axisZ > 1)
-                            axisZ = 1;
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("W + A");
+                            transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("W + D");
+                            transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisZ += axisComeback * Time.deltaTime;
+
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("W");
+                            transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
                     }
                     else if (Input.GetKey(KeyCode.S))
                     {
-                        transform.Translate(Vector3.back * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ -= (3 * Time.deltaTime);
-                        if (axisZ < -1)
-                            axisZ = -1;
-                    }
-                    else
-                    {
-                        if (axisZ > 0)
+                        if (Input.GetKey(KeyCode.A))
                         {
-                            axisZ -= (3 * Time.deltaTime);
-                            if (axisZ < 0)
-                                axisZ = 0;
-                        }
-                        else if (axisZ < 0)
-                        {
-                            axisZ += (3 * Time.deltaTime);
-                            if (axisZ > 0)
-                                axisZ = 0;
-                        }
-                    }
+                            Debug.Log("S + A");
+                            transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
 
-                    if (Input.GetKey(KeyCode.A))
+                            axisZ -= axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("S + D");
+                            transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+
+                            
+                        }
+                        else
+                        {
+                            Debug.Log("S");
+                            transform.Translate(new Vector3(0, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.A))
                     {
                         transform.Translate(Vector3.left * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX -= 3 * Time.deltaTime;
-                        if (axisX < -1)
-                            axisX = -1;
+                        axisX -= axisComeback * Time.deltaTime;
+                        axisZ -= axisComeback * Time.deltaTime;
                     }
                     else if (Input.GetKey(KeyCode.D))
                     {
                         transform.Translate(Vector3.right * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX += (3 * Time.deltaTime);
-                        Debug.Log(axisZ.ToString());
-                        if (axisX > 1)
-                            axisX = 1;
-                    }
-                    else
-                    {
-                        if (axisX > 0)
-                        {
-                            axisX -= (3 * Time.deltaTime);
-                            if (axisX < 0)
-                                axisX = 0;
-                        }
-                        else if (axisX < 0)
-                        {
-                            axisX += (3 * Time.deltaTime);
-                            if (axisX > 0)
-                                axisX = 0;
-                        }
+                        axisX += axisComeback * Time.deltaTime;
+                        axisZ += axisComeback * Time.deltaTime;
                     }
                 }
                 break;
@@ -326,63 +334,87 @@ public class UserController : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ += 3 * Time.deltaTime;
-                        if (axisZ > 1)
-                            axisZ = 1;
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("W + A");
+                            transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("W + D");
+                            transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("W");
+                            transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX -= axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+                        }
                     }
                     else if (Input.GetKey(KeyCode.S))
                     {
-                        transform.Translate(Vector3.back * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ -= (3 * Time.deltaTime);
-                        if (axisZ < -1)
-                            axisZ = -1;
-                    }
-                    else
-                    {
-                        if (axisZ > 0)
+                        if (Input.GetKey(KeyCode.A))
                         {
-                            axisZ -= (3 * Time.deltaTime);
-                            if (axisZ < 0)
-                                axisZ = 0;
-                        }
-                        else if (axisZ < 0)
-                        {
-                            axisZ += (3 * Time.deltaTime);
-                            if (axisZ > 0)
-                                axisZ = 0;
-                        }
-                    }
+                            Debug.Log("S + A");
+                            transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                    if (Input.GetKey(KeyCode.A))
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("S + D");
+                            transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("S");
+                            transform.Translate(new Vector3(0, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.A))
                     {
                         transform.Translate(Vector3.left * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX -= 3 * Time.deltaTime;
-                        if (axisX < -1)
-                            axisX = -1;
+
+                        if (axisX > 0)
+                            axisX -= axisComeback * Time.deltaTime;
+                        else if (axisX < 0)
+                            axisX += axisComeback * Time.deltaTime;
+
+                        axisZ -= axisComeback * Time.deltaTime;
                     }
                     else if (Input.GetKey(KeyCode.D))
                     {
                         transform.Translate(Vector3.right * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX += (3 * Time.deltaTime);
-                        Debug.Log(axisZ.ToString());
-                        if (axisX > 1)
-                            axisX = 1;
-                    }
-                    else
-                    {
+
                         if (axisX > 0)
-                        {
-                            axisX -= (3 * Time.deltaTime);
-                            if (axisX < 0)
-                                axisX = 0;
-                        }
+                            axisX -= axisComeback * Time.deltaTime;
                         else if (axisX < 0)
-                        {
-                            axisX += (3 * Time.deltaTime);
-                            if (axisX > 0)
-                                axisX = 0;
-                        }
+                            axisX += axisComeback * Time.deltaTime;
+
+                        axisZ += axisComeback * Time.deltaTime;
                     }
                 }
                 break;
@@ -390,63 +422,89 @@ public class UserController : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ += 3 * Time.deltaTime;
-                        if (axisZ > 1)
-                            axisZ = 1;
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("W + A");
+                            transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("W + D");
+                            transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("W");
+                            transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+                        }
                     }
                     else if (Input.GetKey(KeyCode.S))
                     {
-                        transform.Translate(Vector3.back * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ -= (3 * Time.deltaTime);
-                        if (axisZ < -1)
-                            axisZ = -1;
-                    }
-                    else
-                    {
-                        if (axisZ > 0)
+                        if (Input.GetKey(KeyCode.A))
                         {
-                            axisZ -= (3 * Time.deltaTime);
-                            if (axisZ < 0)
-                                axisZ = 0;
-                        }
-                        else if (axisZ < 0)
-                        {
-                            axisZ += (3 * Time.deltaTime);
-                            if (axisZ > 0)
-                                axisZ = 0;
-                        }
-                    }
+                            Debug.Log("S + A");
+                            transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                    if (Input.GetKey(KeyCode.A))
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("S + D");
+                            transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("S");
+                            transform.Translate(new Vector3(0, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.A))
                     {
                         transform.Translate(Vector3.left * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX -= 3 * Time.deltaTime;
-                        if (axisX < -1)
-                            axisX = -1;
+
+                        if (axisX > 0)
+                            axisX -= axisComeback * Time.deltaTime;
+                        else if (axisX < 0)
+                            axisX += axisComeback * Time.deltaTime;
+
+                        axisZ += axisComeback * Time.deltaTime;
                     }
                     else if (Input.GetKey(KeyCode.D))
                     {
                         transform.Translate(Vector3.right * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX += (3 * Time.deltaTime);
-                        Debug.Log(axisZ.ToString());
-                        if (axisX > 1)
-                            axisX = 1;
-                    }
-                    else
-                    {
+
                         if (axisX > 0)
-                        {
-                            axisX -= (3 * Time.deltaTime);
-                            if (axisX < 0)
-                                axisX = 0;
-                        }
+                            axisX -= axisComeback * Time.deltaTime;
                         else if (axisX < 0)
-                        {
-                            axisX += (3 * Time.deltaTime);
-                            if (axisX > 0)
-                                axisX = 0;
-                        }
+                            axisX += axisComeback * Time.deltaTime;
+
+                        axisZ -= axisComeback * Time.deltaTime;
                     }
                 }
                 break;
@@ -454,63 +512,86 @@ public class UserController : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ += 3 * Time.deltaTime;
-                        if (axisZ > 1)
-                            axisZ = 1;
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("W + A");
+                            transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("W + D");
+                            transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("W");
+                            transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
                     }
                     else if (Input.GetKey(KeyCode.S))
                     {
-                        transform.Translate(Vector3.back * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ -= (3 * Time.deltaTime);
-                        if (axisZ < -1)
-                            axisZ = -1;
-                    }
-                    else
-                    {
-                        if (axisZ > 0)
+                        if (Input.GetKey(KeyCode.A))
                         {
-                            axisZ -= (3 * Time.deltaTime);
-                            if (axisZ < 0)
-                                axisZ = 0;
-                        }
-                        else if (axisZ < 0)
-                        {
-                            axisZ += (3 * Time.deltaTime);
-                            if (axisZ > 0)
-                                axisZ = 0;
-                        }
-                    }
+                            Debug.Log("S + A");
+                            transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                    if (Input.GetKey(KeyCode.A))
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("S + D");
+                            transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("S");
+                            transform.Translate(new Vector3(0, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.A))
                     {
                         transform.Translate(Vector3.left * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX -= 3 * Time.deltaTime;
-                        if (axisX < -1)
-                            axisX = -1;
+                        axisX += axisComeback * Time.deltaTime;
+
+                        if (axisZ > 0)
+                            axisZ -= axisComeback * Time.deltaTime;
+                        else if (axisZ < 0)
+                            axisZ += axisComeback * Time.deltaTime;
                     }
                     else if (Input.GetKey(KeyCode.D))
                     {
                         transform.Translate(Vector3.right * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX += (3 * Time.deltaTime);
-                        Debug.Log(axisZ.ToString());
-                        if (axisX > 1)
-                            axisX = 1;
-                    }
-                    else
-                    {
-                        if (axisX > 0)
-                        {
-                            axisX -= (3 * Time.deltaTime);
-                            if (axisX < 0)
-                                axisX = 0;
-                        }
-                        else if (axisX < 0)
-                        {
-                            axisX += (3 * Time.deltaTime);
-                            if (axisX > 0)
-                                axisX = 0;
-                        }
+                        axisX -= axisComeback * Time.deltaTime;
+
+                        if (axisZ > 0)
+                            axisZ -= axisComeback * Time.deltaTime;
+                        else if (axisZ < 0)
+                            axisZ += axisComeback * Time.deltaTime;
                     }
                 }
                 break;
@@ -518,63 +599,87 @@ public class UserController : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ += 3 * Time.deltaTime;
-                        if (axisZ > 1)
-                            axisZ = 1;
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("W + A");
+                            transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("W + D");
+                            transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisZ += axisComeback * Time.deltaTime;
+
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("W");
+                            transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
                     }
                     else if (Input.GetKey(KeyCode.S))
                     {
-                        transform.Translate(Vector3.back * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ -= (3 * Time.deltaTime);
-                        if (axisZ < -1)
-                            axisZ = -1;
-                    }
-                    else
-                    {
-                        if (axisZ > 0)
+                        if (Input.GetKey(KeyCode.A))
                         {
-                            axisZ -= (3 * Time.deltaTime);
-                            if (axisZ < 0)
-                                axisZ = 0;
-                        }
-                        else if (axisZ < 0)
-                        {
-                            axisZ += (3 * Time.deltaTime);
-                            if (axisZ > 0)
-                                axisZ = 0;
-                        }
-                    }
+                            Debug.Log("S + A");
+                            transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                    if (Input.GetKey(KeyCode.A))
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+
+                            axisZ -= axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("S + D");
+                            transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+
+
+                        }
+                        else
+                        {
+                            Debug.Log("S");
+                            transform.Translate(new Vector3(0, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.A))
                     {
                         transform.Translate(Vector3.left * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX -= 3 * Time.deltaTime;
-                        if (axisX < -1)
-                            axisX = -1;
+                        axisX -= axisComeback * Time.deltaTime;
+                        axisZ -= axisComeback * Time.deltaTime;
                     }
                     else if (Input.GetKey(KeyCode.D))
                     {
                         transform.Translate(Vector3.right * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX += (3 * Time.deltaTime);
-                        Debug.Log(axisZ.ToString());
-                        if (axisX > 1)
-                            axisX = 1;
-                    }
-                    else
-                    {
-                        if (axisX > 0)
-                        {
-                            axisX -= (3 * Time.deltaTime);
-                            if (axisX < 0)
-                                axisX = 0;
-                        }
-                        else if (axisX < 0)
-                        {
-                            axisX += (3 * Time.deltaTime);
-                            if (axisX > 0)
-                                axisX = 0;
-                        }
+                        axisX += axisComeback * Time.deltaTime;
+                        axisZ += axisComeback * Time.deltaTime;
                     }
                 }
                 break;
@@ -582,63 +687,87 @@ public class UserController : MonoBehaviour
                 {
                     if (Input.GetKey(KeyCode.W))
                     {
-                        transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ += 3 * Time.deltaTime;
-                        if (axisZ > 1)
-                            axisZ = 1;
+                        if (Input.GetKey(KeyCode.A))
+                        {
+                            Debug.Log("W + A");
+                            transform.Translate(new Vector3(-1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX -= axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("W + D");
+                            transform.Translate(new Vector3(1, 0, 1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisZ += axisComeback * Time.deltaTime;
+
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+                        }
+                        else
+                        {
+                            Debug.Log("W");
+                            transform.Translate(Vector3.forward * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX -= axisComeback * Time.deltaTime;
+                            axisZ += axisComeback * Time.deltaTime;
+                        }
                     }
                     else if (Input.GetKey(KeyCode.S))
                     {
-                        transform.Translate(Vector3.back * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisZ -= (3 * Time.deltaTime);
-                        if (axisZ < -1)
-                            axisZ = -1;
-                    }
-                    else
-                    {
-                        if (axisZ > 0)
+                        if (Input.GetKey(KeyCode.A))
                         {
-                            axisZ -= (3 * Time.deltaTime);
-                            if (axisZ < 0)
-                                axisZ = 0;
-                        }
-                        else if (axisZ < 0)
-                        {
-                            axisZ += (3 * Time.deltaTime);
-                            if (axisZ > 0)
-                                axisZ = 0;
-                        }
-                    }
+                            Debug.Log("S + A");
+                            transform.Translate(new Vector3(-1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
 
-                    if (Input.GetKey(KeyCode.A))
+                            if (axisX > 0)
+                                axisX -= axisComeback * Time.deltaTime;
+                            else if (axisX < 0)
+                                axisX += axisComeback * Time.deltaTime;
+
+                            axisZ -= axisComeback * Time.deltaTime;
+
+                        }
+                        else if (Input.GetKey(KeyCode.D))
+                        {
+                            Debug.Log("S + D");
+                            transform.Translate(new Vector3(1, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+
+                            axisX += axisComeback * Time.deltaTime;
+
+                            if (axisZ > 0)
+                                axisZ -= axisComeback * Time.deltaTime;
+                            else if (axisZ < 0)
+                                axisZ += axisComeback * Time.deltaTime;
+
+
+                        }
+                        else
+                        {
+                            Debug.Log("S");
+                            transform.Translate(new Vector3(0, 0, -1) * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
+                            axisX += axisComeback * Time.deltaTime;
+                            axisZ -= axisComeback * Time.deltaTime;
+                        }
+                    }
+                    else if (Input.GetKey(KeyCode.A))
                     {
                         transform.Translate(Vector3.left * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX -= 3 * Time.deltaTime;
-                        if (axisX < -1)
-                            axisX = -1;
+                        axisX -= axisComeback * Time.deltaTime;
+                        axisZ -= axisComeback * Time.deltaTime;
                     }
                     else if (Input.GetKey(KeyCode.D))
                     {
                         transform.Translate(Vector3.right * userMain.GetUnitInfomation().MoveSpeed * Time.deltaTime);
-                        axisX += (3 * Time.deltaTime);
-                        Debug.Log(axisZ.ToString());
-                        if (axisX > 1)
-                            axisX = 1;
-                    }
-                    else
-                    {
-                        if (axisX > 0)
-                        {
-                            axisX -= (3 * Time.deltaTime);
-                            if (axisX < 0)
-                                axisX = 0;
-                        }
-                        else if (axisX < 0)
-                        {
-                            axisX += (3 * Time.deltaTime);
-                            if (axisX > 0)
-                                axisX = 0;
-                        }
+                        axisX += axisComeback * Time.deltaTime;
+                        axisZ += axisComeback * Time.deltaTime;
                     }
                 }
                 break;
