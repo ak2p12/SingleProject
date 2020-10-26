@@ -35,9 +35,9 @@ public class UserController : MonoBehaviour
     {
         while (true)
         {
-            animatorController.applyRootMotion = false;
-            KeyInput();
+            //animatorController.applyRootMotion = false;
             MouseInput();
+            KeyInput();
 
             yield return null;
         }
@@ -45,7 +45,55 @@ public class UserController : MonoBehaviour
 
     private void KeyInput()
     {
-        if (!animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
+        if (Input.GetKeyDown(KeyCode.Space) && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
+        {
+            if (Input.GetKey(KeyCode.W) )
+            {
+                if (Input.GetKey(KeyCode.A))
+                {
+                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(-1, 0, 1)), Vector3.up);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(1, 0, 1)), Vector3.up);
+                }
+                else
+                {
+                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(0, 0, 1)), Vector3.up);
+                }
+                
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                if (Input.GetKey(KeyCode.A))
+                {
+                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(-1, 0, -1)), Vector3.up);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(1, 0, -1)), Vector3.up);
+                }
+                else
+                {
+                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(0, 0, -1)), Vector3.up);
+                }
+
+            }
+            else if (Input.GetKey(KeyCode.A))
+            {
+                userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(-1, 0, 0)), Vector3.up);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(1, 0, 0)), Vector3.up);
+            }
+
+            animatorController.SetTrigger("Roll Trigger");
+            rollCheck = true;
+
+        }
+
+        if (rollCheck == false)
         {
             switch (userLook)
             {
@@ -588,55 +636,63 @@ public class UserController : MonoBehaviour
                     }
                     break;
             }
-        }
 
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        {
-            isMovingKey = true;
-        }
-
-        if (!isMovingKey)
-        {
-            if (axisZ > 0)
+            if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
             {
-                axisZ -= (axisComeback * Time.deltaTime);
-                if (axisZ < 0)
-                    axisX = 0;
-
+                isMovingKey = true;
             }
-            else if (axisZ < 0)
+
+            if (!isMovingKey)
             {
-                axisZ += (axisComeback * Time.deltaTime);
                 if (axisZ > 0)
-                    axisZ = 0;
+                {
+                    axisZ -= (axisComeback * Time.deltaTime);
+                    if (axisZ < 0)
+                        axisX = 0;
+
+                }
+                else if (axisZ < 0)
+                {
+                    axisZ += (axisComeback * Time.deltaTime);
+                    if (axisZ > 0)
+                        axisZ = 0;
+                }
+
+                if (axisX > 0)
+                {
+                    axisX -= (axisComeback * Time.deltaTime);
+                    if (axisX < 0)
+                        axisX = 0;
+                }
+                else if (axisX < 0)
+                {
+                    axisX += (axisComeback * Time.deltaTime);
+                    if (axisX > 0)
+                        axisX = 0;
+                }
+            }
+            else
+            {
+                if (axisX > 1)
+                    axisX = 1;
+                else if (axisX < -1)
+                    axisX = -1;
+                if (axisZ > 1)
+                    axisZ = 1;
+                else if (axisZ < -1)
+                    axisZ = -1;
             }
 
-            if (axisX > 0)
-            {
-                axisX -= (axisComeback * Time.deltaTime);
-                if (axisX < 0)
-                    axisX = 0;
-            }
-            else if (axisX < 0)
-            {
-                axisX += (axisComeback * Time.deltaTime);
-                if (axisX > 0)
-                    axisX = 0;
-            }
+            isMovingKey = false;
         }
         else
         {
-            if (axisX > 1)
-                axisX = 1;
-            else if (axisX < -1)
-                axisX = -1;
-            if (axisZ > 1)
-                axisZ = 1;
-            else if (axisZ < -1)
-                axisZ = -1;
+            if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll") && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+            {
+                rollCheck = false;
+            }
         }
-
-        isMovingKey = false;
+      
 
         animatorController.SetFloat("Dir X", axisX);
         animatorController.SetFloat("Dir Z", axisZ);
@@ -647,58 +703,58 @@ public class UserController : MonoBehaviour
 
         ray = userCamera.ScreenPointToRay(mousePos);
 
-        if (Physics.Raycast(ray, out rayHit, 50.0f))
+        if ( Physics.Raycast(ray, out rayHit, 50.0f) && !rollCheck)
         {
-            transform.LookAt(rayHit.point, Vector3.up);
-            Debug.DrawLine(transform.position, rayHit.point);
+            userCharacter.transform.LookAt(rayHit.point, Vector3.up);
+            Debug.DrawLine(userCharacter.transform.position, rayHit.point);
         }
         
         //337.5 ~ 360.0 
         //0 ~ 22.5
-        if ( (transform.eulerAngles.y > 337.5f && transform.eulerAngles.y <= 360.0f) ||
-            (transform.eulerAngles.y >= 0.0f && transform.eulerAngles.y <= 22.5f) )
+        if ( (userCharacter.transform.eulerAngles.y > 337.5f && userCharacter.transform.eulerAngles.y <= 360.0f) ||
+            (userCharacter.transform.eulerAngles.y >= 0.0f && userCharacter.transform.eulerAngles.y <= 22.5f) )
         {
             userLook = USER_LOOK.FORWORD;
         }
         // 22.6 ~ 67.5
-        else if(transform.eulerAngles.y > 22.5f &&
-                transform.eulerAngles.y <= 67.5f)
+        else if(userCharacter.transform.eulerAngles.y > 22.5f &&
+                userCharacter.transform.eulerAngles.y <= 67.5f)
         {
             userLook = USER_LOOK.FORWORD_RIGHT;
         }
         // 67.6 ~ 112.5
-        else if (transform.eulerAngles.y > 67.5f &&
-                transform.eulerAngles.y <= 112.5f)
+        else if (userCharacter.transform.eulerAngles.y > 67.5f &&
+                userCharacter.transform.eulerAngles.y <= 112.5f)
         {
             userLook = USER_LOOK.RIGHT;
         }
         // 112.6 ~ 157.5
-        else if (transform.eulerAngles.y > 112.5f &&
-                transform.eulerAngles.y <= 157.5f)
+        else if (userCharacter.transform.eulerAngles.y > 112.5f &&
+                userCharacter.transform.eulerAngles.y <= 157.5f)
         {
             userLook = USER_LOOK.BACK_RIGHT;
         }
         // 157.6 ~ 202.5
-        else if (transform.eulerAngles.y > 157.5f &&
-                transform.eulerAngles.y <= 202.5f)
+        else if (userCharacter.transform.eulerAngles.y > 157.5f &&
+                userCharacter.transform.eulerAngles.y <= 202.5f)
         {
             userLook = USER_LOOK.BACK;
         }
         // 202.6 ~ 247.5
-        else if (transform.eulerAngles.y > 202.5f &&
-                transform.eulerAngles.y <= 247.5f)
+        else if (userCharacter.transform.eulerAngles.y > 202.5f &&
+                userCharacter.transform.eulerAngles.y <= 247.5f)
         {
             userLook = USER_LOOK.BACK_LEFT;
         }
         // 247.6 ~ 292.5
-        else if (transform.eulerAngles.y > 247.5f &&
-                transform.eulerAngles.y <= 292.5f)
+        else if (userCharacter.transform.eulerAngles.y > 247.5f &&
+                userCharacter.transform.eulerAngles.y <= 292.5f)
         {
             userLook = USER_LOOK.LEFT;
         }
         // 292.5 ~ 337.4
-        else if (transform.eulerAngles.y > 292.5f &&
-                transform.eulerAngles.y <= 337.5f)
+        else if (userCharacter.transform.eulerAngles.y > 292.5f &&
+                userCharacter.transform.eulerAngles.y <= 337.5f)
         {
             userLook = USER_LOOK.FORWORD_LEFT;
         }
