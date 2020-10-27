@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UIElements;
 
 public class UserController : MonoBehaviour
 {
@@ -17,10 +19,23 @@ public class UserController : MonoBehaviour
     private bool isMovingKey;
     private float axisComeback;
 
+    private bool isAttack_L1;
+    private bool isAttack_L2;
+    private bool isAttack_L3;
+    private bool isAttack_L4;
+
+    private bool isAttack_R1;
+    private bool isAttack_R2;
+    private bool isAttack_R3;
+    private bool isAttack_R4;
+
     private bool rollCheck;
+    private float rollLoopTime;
+    private Vector3 rollDirection;
 
     void Start()
     {
+        rollLoopTime = 0.5f;
         rollCheck = false;
         axisComeback = 10.0f;
         animatorController = GameObject.Find("User").GetComponentInChildren<Animator>();
@@ -35,64 +50,87 @@ public class UserController : MonoBehaviour
     {
         while (true)
         {
-            //animatorController.applyRootMotion = false;
-            MouseInput();
-            KeyInput();
+            if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Move_Blend") && !animatorController.IsInTransition(0))
+            {
+                ResetAttack();
+            }
 
+            Action_Input();
+            Mouse_Input();
+            Movement_Input();
+            Attack_Input();
+
+
+                
+            Debug.Log(rollDirection.ToString());
             yield return null;
         }
     }
-
-    private void KeyInput()
+    private void Action_Input()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
+        //구르기 회피 
+        if (Input.GetKeyDown(KeyCode.Space) && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Start") && !rollCheck)
         {
-            if (Input.GetKey(KeyCode.W) )
+            if (Input.GetKey(KeyCode.W))
             {
                 if (Input.GetKey(KeyCode.A))
                 {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(-1, 0, 1)), Vector3.up);
+                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(-1, 0, 1).normalized, Vector3.up);
+                    rollDirection = new Vector3(-1, 0, 1).normalized;
                 }
                 else if (Input.GetKey(KeyCode.D))
                 {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(1, 0, 1)), Vector3.up);
+                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(1, 0, 1).normalized, Vector3.up);
+                    rollDirection = new Vector3(1, 0, 1).normalized;
                 }
                 else
                 {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(0, 0, 1)), Vector3.up);
+                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(0, 0, 1).normalized, Vector3.up);
+                    rollDirection = new Vector3(0, 0, 1).normalized;
                 }
-                
+
             }
             else if (Input.GetKey(KeyCode.S))
             {
                 if (Input.GetKey(KeyCode.A))
                 {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(-1, 0, -1)), Vector3.up);
+                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(-1, 0, -1).normalized, Vector3.up);
+                    rollDirection = new Vector3(-1, 0, -1).normalized;
                 }
                 else if (Input.GetKey(KeyCode.D))
                 {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(1, 0, -1)), Vector3.up);
+                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(1, 0, -1).normalized, Vector3.up);
+                    rollDirection = new Vector3(1, 0, -1).normalized;
                 }
                 else
                 {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(0, 0, -1)), Vector3.up);
+                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(0, 0, -1).normalized, Vector3.up);
+                    rollDirection = new Vector3(0, 0, -1).normalized;
                 }
 
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(-1, 0, 0)), Vector3.up);
+                userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(-1, 0, 0).normalized, Vector3.up);
+                rollDirection = new Vector3(-1, 0, 0).normalized;
             }
             else if (Input.GetKey(KeyCode.D))
             {
-                userCharacter.transform.LookAt(userCharacter.transform.position + (new Vector3(1, 0, 0)), Vector3.up);
+                userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(1, 0, 0).normalized, Vector3.up);
+                rollDirection = new Vector3(1, 0, 0).normalized;
             }
 
-            animatorController.SetTrigger("Roll Trigger");
+            animatorController.SetTrigger("Roll_Start_Trigger");
             rollCheck = true;
-
         }
 
+        //if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Loop") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Start"))
+        //{
+        //    //userCharacter.transform.Translate(rollDirection * 10.0f * Time.deltaTime);
+        //}
+    }
+    private void Movement_Input()
+    {
         if (rollCheck == false)
         {
             switch (userLook)
@@ -687,7 +725,7 @@ public class UserController : MonoBehaviour
         }
         else
         {
-            if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll") && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.8f)
+            if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_End"))
             {
                 rollCheck = false;
             }
@@ -697,7 +735,7 @@ public class UserController : MonoBehaviour
         animatorController.SetFloat("Dir X", axisX);
         animatorController.SetFloat("Dir Z", axisZ);
     }
-    private void MouseInput()
+    private void Mouse_Input()
     {
         Vector3 mousePos = Input.mousePosition;
 
@@ -758,5 +796,97 @@ public class UserController : MonoBehaviour
         {
             userLook = USER_LOOK.FORWORD_LEFT;
         }
+    }
+    private void Attack_Input()
+    {
+        //마우스 왼클릭
+        if (Input.GetMouseButton(0))
+        {
+            if ( (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L3") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R3")) &&
+                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+            {
+                if (!isAttack_L4 && (isAttack_L3 || isAttack_R3))
+                {
+                    isAttack_L4 = true;
+                    animatorController.SetTrigger("Attack_L4");
+                }
+            }
+            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L2") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R2")) &&
+                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+            {
+                if ( !isAttack_L3 && (isAttack_L2 || isAttack_R2))
+                {
+                    isAttack_L3 = true;
+                    animatorController.SetTrigger("Attack_L3");
+                }
+            }
+            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L1") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R1")) &&
+                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+            {
+                if ( !isAttack_L2 && (isAttack_L1 || isAttack_R1) )
+                {
+                    isAttack_L2 = true;
+                    animatorController.SetTrigger("Attack_L2");
+                }
+                
+            }
+            else
+            {
+                if ( !isAttack_L1 && !isAttack_R1)
+                {
+                    isAttack_L1 = true;
+                    animatorController.SetTrigger("Attack_L1");
+                }
+            }
+            
+        }
+        //마우스 오른클릭
+        else if (Input.GetMouseButton(1))
+        {
+            if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L3") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R3")) &&
+                 animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+            {
+                if (!isAttack_R4 && (isAttack_L3 || isAttack_R3))
+                {
+                    isAttack_R4 = true;
+                    animatorController.SetTrigger("Attack_R4");
+                }
+            }
+            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L2") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R2")) &&
+                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+            {
+                if (!isAttack_R3 && (isAttack_L2 || isAttack_R2))
+                {
+                    
+                    isAttack_R3 = true;
+                    animatorController.SetTrigger("Attack_R3");
+                }
+            }
+            else if ( (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L1") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R1") ) &&
+                 
+                (animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.6f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f) )
+            {
+                if (!isAttack_R2 && ( isAttack_L1 || isAttack_R1 ))
+                {
+                    isAttack_R2 = true;
+                    animatorController.SetTrigger("Attack_R2");
+                }
+            }
+            else
+            {
+                if (!isAttack_L1 && !isAttack_R1)
+                {
+                    isAttack_R1 = true;
+                    animatorController.SetTrigger("Attack_R1");
+                }
+            }
+
+        }
+    }
+
+    void ResetAttack()
+    {
+        //Debug.Log("ASDF");
+        isAttack_L1 = isAttack_L2 = isAttack_L3 = isAttack_L4 = isAttack_R1 = isAttack_R2 = isAttack_R3 = isAttack_R4 = false;
     }
 }
