@@ -729,7 +729,8 @@ ModelImporter:
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
       to improve retargeting quality.\n\t'B_Spine' has translation animation that
-      will be discarded.\n"
+      will be discarded.\nEvent Event_Roll_End has a time (0.435109) outside the
+      clip's valid range (0.000000..0.433333). It will never be fired"
     animationRetargetingWarnings: "\nRetargeting quality report for clip 'Take 001':\n\tLeftUpperArm
       average position error 15.8 mm and maximum position error 38.5 mm at time 0:24
       (82.8%) Frame 24\n\tLeftLowerArm average position error 15.8 mm and maximum

@@ -30,12 +30,9 @@ public class UserController : MonoBehaviour
     private bool isAttack_R4;
 
     private bool rollCheck;
-    private float rollLoopTime;
-    private Vector3 rollDirection;
 
     void Start()
     {
-        rollLoopTime = 0.5f;
         rollCheck = false;
         axisComeback = 10.0f;
         animatorController = GameObject.Find("User").GetComponentInChildren<Animator>();
@@ -59,75 +56,28 @@ public class UserController : MonoBehaviour
             Mouse_Input();
             Movement_Input();
             Attack_Input();
-
-
                 
-            Debug.Log(rollDirection.ToString());
             yield return null;
         }
     }
     private void Action_Input()
     {
         //구르기 회피 
-        if (Input.GetKeyDown(KeyCode.Space) && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Start") && !rollCheck)
+        if (Input.GetKeyDown(KeyCode.Space) && rollCheck == false)
         {
-            if (Input.GetKey(KeyCode.W))
-            {
-                if (Input.GetKey(KeyCode.A))
-                {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(-1, 0, 1).normalized, Vector3.up);
-                    rollDirection = new Vector3(-1, 0, 1).normalized;
-                }
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(1, 0, 1).normalized, Vector3.up);
-                    rollDirection = new Vector3(1, 0, 1).normalized;
-                }
-                else
-                {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(0, 0, 1).normalized, Vector3.up);
-                    rollDirection = new Vector3(0, 0, 1).normalized;
-                }
-
-            }
-            else if (Input.GetKey(KeyCode.S))
-            {
-                if (Input.GetKey(KeyCode.A))
-                {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(-1, 0, -1).normalized, Vector3.up);
-                    rollDirection = new Vector3(-1, 0, -1).normalized;
-                }
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(1, 0, -1).normalized, Vector3.up);
-                    rollDirection = new Vector3(1, 0, -1).normalized;
-                }
-                else
-                {
-                    userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(0, 0, -1).normalized, Vector3.up);
-                    rollDirection = new Vector3(0, 0, -1).normalized;
-                }
-
-            }
-            else if (Input.GetKey(KeyCode.A))
-            {
-                userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(-1, 0, 0).normalized, Vector3.up);
-                rollDirection = new Vector3(-1, 0, 0).normalized;
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                userCharacter.transform.LookAt(userCharacter.transform.position + new Vector3(1, 0, 0).normalized, Vector3.up);
-                rollDirection = new Vector3(1, 0, 0).normalized;
-            }
-
-            animatorController.SetTrigger("Roll_Start_Trigger");
             rollCheck = true;
+            if ( !animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Start") && !animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Loop") && 
+                !animatorController.IsInTransition(0))
+            {
+                animatorController.SetTrigger("Roll_Start_Trigger");
+            }
         }
 
-        //if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Loop") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Start"))
-        //{
-        //    //userCharacter.transform.Translate(rollDirection * 10.0f * Time.deltaTime);
-        //}
+        if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Loop") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_Start"))
+        {
+            userCharacter.transform.position += userCharacter.transform.forward * 10.0f * Time.deltaTime;
+            
+        }
     }
     private void Movement_Input()
     {
@@ -725,12 +675,11 @@ public class UserController : MonoBehaviour
         }
         else
         {
-            if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_End"))
+            if (animatorController.GetCurrentAnimatorStateInfo(0).IsName("Roll_End") && animatorController.IsInTransition(0))
             {
                 rollCheck = false;
             }
         }
-      
 
         animatorController.SetFloat("Dir X", axisX);
         animatorController.SetFloat("Dir Z", axisZ);
@@ -741,10 +690,11 @@ public class UserController : MonoBehaviour
 
         ray = userCamera.ScreenPointToRay(mousePos);
 
-        if ( Physics.Raycast(ray, out rayHit, 50.0f) && !rollCheck)
+        if ( ( Physics.Raycast(ray, out rayHit, 50.0f) ) && (rollCheck == false) )
         {
             userCharacter.transform.LookAt(rayHit.point, Vector3.up);
             Debug.DrawLine(userCharacter.transform.position, rayHit.point);
+            Debug.DrawLine(userCharacter.transform.position + userCharacter.transform.forward, rayHit.point , Color.red);
         }
         
         //337.5 ~ 360.0 
@@ -883,10 +833,9 @@ public class UserController : MonoBehaviour
 
         }
     }
-
-    void ResetAttack()
+    private void ResetAttack()
     {
-        //Debug.Log("ASDF");
         isAttack_L1 = isAttack_L2 = isAttack_L3 = isAttack_L4 = isAttack_R1 = isAttack_R2 = isAttack_R3 = isAttack_R4 = false;
     }
+
 }
