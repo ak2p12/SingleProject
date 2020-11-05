@@ -63,43 +63,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\AnimatorParentMove.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\CameraController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\GUIControls.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\IKHands.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\PerfectLookAt\FABRIKSolver.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\PerfectLookAt\PerfectLookAt.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\PerfectLookAt\PerfectLookAtData.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\PerfectLookAt\PerfectLookAtLegStabilizer.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\RPGCharacterAnimatorEvents.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\RPGCharacterController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\RPGCharacterInputController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\RPGCharacterMovementController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\RPGCharacterWeaponController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\RPG Character Animation Pack\Code\SetupInputTags.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\Code\Gravity.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\Code\PlayerCamera.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\Code\PlayerInputController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\Code\PlayerMachine.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\Code\PlayerMachineDebug.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\Code\SimpleStateMachine.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\BSPTree.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\BruteForceMesh.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCharacterController.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCollider.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperCollisionType.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperMath.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Core\SuperStateMachine.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\DebugDraw.cs" />
-    <Compile Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\Math3d.cs" />
+    <Compile Include="Assets\Scripts\Enemy\Bat.cs" />
     <Compile Include="Assets\Scripts\FollowCamera.cs" />
+    <Compile Include="Assets\Scripts\GlobalClass.cs" />
     <Compile Include="Assets\Scripts\GlobalEnum.cs" />
     <Compile Include="Assets\Scripts\GlobalStruct.cs" />
     <Compile Include="Assets\Scripts\ManagerRule.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\UserController.cs" />
     <Compile Include="Assets\Scripts\UserMain.cs" />
-    <None Include="Assets\Resource_Origin\ExplosiveLLC\SuperCharacterController\SuperCharacterController\README.txt" />
+    <None Include="Assets\RPG Monster Wave PBR\Shaders\PBRMaskTint.shader" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/ak2p1/Desktop/Single/Single/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
