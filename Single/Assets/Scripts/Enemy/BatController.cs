@@ -10,7 +10,11 @@ public class BatController : Unit
     [HideInInspector] public Collider[] colliders;
 
     public LayerMask targerLayer;
-    public bool isCatch;    
+
+    public bool isCatch;
+    public bool inAttackRange;
+    public Vector3 targetPosition;
+
     //public BehaviorTree root;
     //public Sequence BT_selecter;
     //public Action_Roaming BT_roaming;
@@ -43,7 +47,6 @@ public class BatController : Unit
             if (colliders[0] != null)
             {
                 isCatch = true;
-                //Debug.Log(colliders[0].gameObject.name.ToString());
             }
 
             yield return null;
@@ -62,32 +65,47 @@ public class BatController : Unit
 
 public class Condition_Find : Condition
 {
-    public override void SetUnit(Unit _unit)
-    {
-        unit = _unit;
-    }
-    public override void SetTask(Task task)
-    {
-        childTask = task;
-    }
+    public override void SetUnit(Unit _unit) { unit = _unit; }
+    public override void SetTask(Task task) { childTask = task; }
     public override bool ChackCondition()
     {
-        //발견?
-        //unit.GetComponent<BatController>().
-
-        return false;
+        if (unit.GetComponent<BatController>().isCatch)
+        {
+            return false;
+        }
+        return true;
     }
     public override bool Result()
     {
+        //발견 못하면 실행
         if (ChackCondition())
         {
             return childTask.Result();
         }
-
         return false;
     }
-
-
+}
+public class Condition_AttactRagne : Condition
+{
+    public override void SetUnit(Unit _unit) { unit = _unit; }
+    public override void SetTask(Task task) { childTask = task; }
+    public override bool ChackCondition()
+    {
+        if (unit.GetComponent<BatController>().inAttackRange)
+        {
+            return false;
+        }
+        return true;
+    }
+    public override bool Result()
+    {
+        //공격범위 밖에 있다면 실행
+        if (ChackCondition())
+        {
+            return childTask.Result();
+        }
+        return false;
+    }
 }
 
 
@@ -107,6 +125,7 @@ public class Action_Roaming : ActionTask
 
     public override bool OnUpdate()
     {
+
         return true;
     }
 
