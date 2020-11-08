@@ -8,6 +8,25 @@ public abstract class Task
     public abstract bool Result();
 }
 
+//메인
+public class BehaviorTree : Task
+{
+    public Task root;
+    public bool endRoot;
+    public void SetTask(Task task)
+    {
+        root = task;
+        endRoot = false;
+    }
+
+    public override bool Result()
+    {
+        if (!endRoot)
+            endRoot = root.Result();
+        return endRoot;
+    }
+}
+
 //Composite Task
 //실질적인 루프 
 public abstract class Composite : Task 
@@ -85,9 +104,18 @@ public class Parallel : Composite
 public abstract class Decorator : Task
 {
     public Task childTask;
-
+    public abstract void SetTask(Task task);
     public abstract bool ChackCondition();
-
     public abstract override bool Result();
 }
+
+public abstract class ActionTask : Task
+{
+    protected bool isStart = false;
+    public abstract void OnStart();
+    public abstract bool OnUpdate();
+    public abstract bool OnEnd();
+    public abstract override bool Result();
+}
+
 

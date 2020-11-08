@@ -35,7 +35,7 @@ public class UserController : MonoBehaviour
     {
         rollCheck = false;
         axisComeback = 10.0f;
-        animatorController = GameObject.Find("User").GetComponentInChildren<Animator>();
+        animatorController = GetComponentInChildren<Animator>();
         userCamera = GameObject.Find("UserCamera").GetComponent<Camera>();
         userCharacter = GameObject.Find("User/RPG-Character");
         isMovingKey = false;
