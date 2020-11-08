@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.Audio;
@@ -31,14 +32,17 @@ public class UserController : MonoBehaviour
 
     private bool rollCheck;
 
+    [HideInInspector] public Collider[] colliders;
+    public LayerMask targerLayer;
+
     void Start()
     {
         rollCheck = false;
-        axisComeback = 10.0f;
+        axisComeback = 3.0f;
         animatorController = GetComponentInChildren<Animator>();
         userCamera = GameObject.Find("UserCamera").GetComponent<Camera>();
-        userCharacter = transform.GetComponentInChildren<Transform>().gameObject;
-              isMovingKey = false;
+        userCharacter = GetComponentInChildren<Animator>().gameObject;
+        isMovingKey = false;
         userMain = GetComponent<UserMain>();
         StartCoroutine(Input_Coroutine());
     }
@@ -51,6 +55,14 @@ public class UserController : MonoBehaviour
             {
                 ResetAttack();
             }
+
+            //int find = Physics.OverlapSphereNonAlloc(
+            //       userCharacter.transform.position,
+            //       5,
+            //       colliders,
+            //       targerLayer);
+
+            //Debug.Log(find.ToString());
 
             Action_Input();
             Mouse_Input();
@@ -690,11 +702,11 @@ public class UserController : MonoBehaviour
 
         ray = userCamera.ScreenPointToRay(mousePos);
 
-        if ( ( Physics.Raycast(ray, out rayHit, 50.0f) ) && (rollCheck == false) )
+        if ( ( Physics.Raycast(ray, out rayHit, 50.0f, 1 << LayerMask.NameToLayer("Land")) ) && (rollCheck == false) )
         {
             userCharacter.transform.LookAt(rayHit.point, Vector3.up);
             Debug.DrawLine(userCharacter.transform.position, rayHit.point);
-            Debug.DrawLine(userCharacter.transform.position + userCharacter.transform.forward, rayHit.point , Color.red);
+            Debug.DrawLine(userCharacter.transform.position + userCharacter.transform.forward, rayHit.point, Color.red);
         }
         
         //337.5 ~ 360.0 
@@ -836,6 +848,10 @@ public class UserController : MonoBehaviour
     private void ResetAttack()
     {
         isAttack_L1 = isAttack_L2 = isAttack_L3 = isAttack_L4 = isAttack_R1 = isAttack_R2 = isAttack_R3 = isAttack_R4 = false;
+    }
+
+    private void OnDrawGizmos()
+    {
     }
 
 }

@@ -103,9 +103,18 @@ public class Parallel : Composite
 
 public abstract class Decorator : Task
 {
-    public Task childTask;
+    protected Task childTask;
     public abstract void SetTask(Task task);
     public abstract bool ChackCondition();
+    public abstract override bool Result();
+}
+
+public abstract class Condition : Decorator
+{
+    public Unit unit;
+    public abstract void SetUnit(Unit _unit);
+    public abstract override void SetTask(Task task);
+    public abstract override bool ChackCondition();
     public abstract override bool Result();
 }
 
