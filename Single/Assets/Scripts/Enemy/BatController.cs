@@ -5,6 +5,8 @@ using UnityEngine;
 public class BatController : Unit
 {
     private Animator animatorController;
+    private GameObject enemyCharacter;
+
 
     private BehaviorTree root;
     private Sequence BT_selecter;
@@ -20,7 +22,8 @@ public class BatController : Unit
     // Start is called before the first frame update
     void Start()
     {
-        root = new BehaviorTree();
+        enemyCharacter = GetComponentInChildren<Transform>().gameObject;
+        //root = new BehaviorTree();
         //selecter_1 = new Sequence();
         //root.SetTask(selecter_1);
         //selecter_1.AddTask();
@@ -36,15 +39,15 @@ public class BatController : Unit
 
     IEnumerator Update_Coroution()
     {
-        while (true)
-        {
-            if (root.Result())
-            {
-                Debug.Log("메인 종료");
-            }
+        //while (true)
+        //{
+        //    //if (root.Result())
+        //    //{
+        //    //    Debug.Log("메인 종료");
+        //    //}
 
             yield return null;
-        }
+        //}
     }
 }
 
@@ -60,6 +63,14 @@ public class Condition_Find : Decorator
     public override bool ChackCondition()
     {
         //유저를 발견했습니까?
+
+        //int find = Physics.OverlapSphereNonAlloc(
+        //       new Vector3(this.transform.position.x, this.transform.position.y + (1 * this.transform.localScale.y), this.transform.position.z),
+        //       movingUnitInfo.BuffRadius,
+        //       collidersTeam,
+        //       teamLayerMask);
+
+
         if (!isFind)
             return true;
 

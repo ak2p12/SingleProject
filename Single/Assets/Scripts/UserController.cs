@@ -37,8 +37,8 @@ public class UserController : MonoBehaviour
         axisComeback = 10.0f;
         animatorController = GetComponentInChildren<Animator>();
         userCamera = GameObject.Find("UserCamera").GetComponent<Camera>();
-        userCharacter = GameObject.Find("User/RPG-Character");
-        isMovingKey = false;
+        userCharacter = transform.GetComponentInChildren<Transform>().gameObject;
+              isMovingKey = false;
         userMain = GetComponent<UserMain>();
         StartCoroutine(Input_Coroutine());
     }
