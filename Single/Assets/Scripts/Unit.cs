@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class Unit : MonoBehaviour
 {
-    protected UnitInformation UnitInfo;
+    public UnitInformation unitInfo;
 }

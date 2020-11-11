@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class Task
 {
     protected bool result = false;
-    public abstract bool Result();
+    public abstract bool Result(Unit _unit);
 }
 
 //메인
@@ -13,16 +13,17 @@ public class BehaviorTree : Task
 {
     public Task root;
     public bool endRoot;
-    public void SetTask(Task task)
+
+    public void Init(Task _task)
     {
-        root = task;
+        root = _task;
         endRoot = false;
     }
 
-    public override bool Result()
+    public override bool Result(Unit _unit)
     {
         if (!endRoot)
-            endRoot = root.Result();
+            endRoot = root.Result(_unit);
         return endRoot;
     }
 }
@@ -33,9 +34,9 @@ public abstract class Composite : Task
 {
     public List<Task> List_childTask = new List<Task>();     //자식 태스크를 담을 리스트
 
-    public void AddTask(Task task)
+    public void AddTask(Task _task)
     {
-        List_childTask.Add(task);
+        List_childTask.Add(_task);
     }
 
     public List<Task> GetListTask()
@@ -43,18 +44,18 @@ public abstract class Composite : Task
         return List_childTask;
     }
 
-    public abstract override bool Result();
+    public abstract override bool Result(Unit _unit);
 }
 
 //자식 노드중 하나라도 true 반환하면 즉시 true 반환
 //자식 노드중 전부 false 반환하면 false 반환
 public class Selecter : Composite
 {
-    public override bool Result()
+    public override bool Result(Unit _unit)
     {
         for (int i = 0; i < List_childTask.Count; ++i )
         {
-            if (true == List_childTask[i].Result())
+            if (true == List_childTask[i].Result(_unit))
             {
                 return true;
             }
@@ -68,11 +69,11 @@ public class Selecter : Composite
 //자식 노드중 전부 true 반환하면 true 반환
 public class Sequence : Composite
 {
-    public override bool Result()
+    public override bool Result(Unit _unit)
     {
         for (int i = 0; i < List_childTask.Count; ++i)
         {
-            if (false == List_childTask[i].Result())
+            if (false == List_childTask[i].Result(_unit))
             {
                 return false;
             }
@@ -86,11 +87,11 @@ public class Sequence : Composite
 //넣은 순서로 실행
 public class Parallel : Composite
 {
-    public override bool Result()
+    public override bool Result(Unit _unit)
     {
         for (int i = 0; i < List_childTask.Count; ++i)
         {
-            List_childTask[i].Result();
+            List_childTask[i].Result(_unit);
         }
 
         return true;
@@ -104,27 +105,25 @@ public class Parallel : Composite
 public abstract class Decorator : Task
 {
     protected Task childTask;
-    public abstract void SetTask(Task task);
-    public abstract bool ChackCondition();
-    public abstract override bool Result();
+    public abstract void SetTask(Task _task);
+    public abstract bool ChackCondition(Unit _unit);
+    public abstract override bool Result(Unit _unit);
 }
 
 public abstract class Condition : Decorator
 {
-    public Unit unit;
-    public abstract void SetUnit(Unit _unit);
-    public abstract override void SetTask(Task task);
-    public abstract override bool ChackCondition();
-    public abstract override bool Result();
+    public abstract override void SetTask(Task _task);
+    public abstract override bool ChackCondition(Unit _unit);
+    public abstract override bool Result(Unit _unit);
 }
 
 public abstract class ActionTask : Task
 {
     protected bool isStart = false;
-    public abstract void OnStart();
-    public abstract bool OnUpdate();
-    public abstract bool OnEnd();
-    public abstract override bool Result();
+    public abstract void OnStart(Unit _unit);
+    public abstract bool OnUpdate(Unit _unit);
+    public abstract bool OnEnd(Unit _unit);
+    public abstract override bool Result(Unit _unit);
 }
 
 
