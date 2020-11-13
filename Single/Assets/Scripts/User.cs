@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserMain : Unit
+public class User : Unit
 {
-    private UserController Control;
+    [HideInInspector] public UserController Control;
+    public Transform ModelTransform;
+
     void Start()
     {
         unitInfo.MoveSpeed = 3.0f;

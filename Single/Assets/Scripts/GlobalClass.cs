@@ -117,6 +117,17 @@ public abstract class Condition : Decorator
     public abstract override bool Result(Unit _unit);
 }
 
+public abstract class TimeOut : Decorator
+{
+    protected float timeOut;
+    protected float currentTime;
+
+    public abstract override void SetTask(Task _task);
+    public abstract void SetTime(float _time);
+    public abstract override bool ChackCondition(Unit _unit);
+    public abstract override bool Result(Unit _unit);
+}
+
 public abstract class ActionTask : Task
 {
     protected bool isStart = false;

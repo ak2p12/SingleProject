@@ -13,7 +13,6 @@ public class BatController : Unit
     public LayerMask targerLayer;
 
     public bool isCatch;
-    public bool isDead;
     public bool inAttackRange;
     public Vector3 targetPosition;
     public LineRenderer line;
@@ -23,9 +22,8 @@ public class BatController : Unit
     public Selecter selecter_1;
     public Condition_isFind condition_isFine;
     public Condition_isDead condition_isDead;
+    public TimeOut_Delay timeOut_Delay;
     public Action_Roaming roaming;
-    //public Action_Trace BT_trace;
-    //public Action_Attack BT_attack;
 
     void Start()
     {
@@ -34,10 +32,14 @@ public class BatController : Unit
         selecter_1 = new Selecter();
         condition_isFine = new Condition_isFind();
         condition_isDead = new Condition_isDead();
+        timeOut_Delay = new TimeOut_Delay();
         roaming = new Action_Roaming();
 
+
         condition_isFine.SetTask(roaming);
-        selecter_1.AddTask(condition_isFine);
+        timeOut_Delay.SetTask(condition_isFine);
+        timeOut_Delay.SetTime(3.0f);
+        selecter_1.AddTask(timeOut_Delay);
         sequence_1.AddTask(selecter_1);
         sequence_1.AddTask(condition_isDead);
         root.Init(sequence_1);
@@ -56,59 +58,84 @@ public class BatController : Unit
     {
         while (true)
         {
-            System.Array.Clear(colliders, 0, colliders.Length);
             //적를 발견했습니까?
-            int find = Physics.OverlapSphereNonAlloc(
+            if (!isCatch)
+            {
+                int find = Physics.OverlapSphereNonAlloc(
                    transform.position,
                    unitInfo.DetectionRange,
                    colliders,
                    targerLayer);
 
-            if (colliders[0] != null)
-                isCatch = true;
-            else
-                isCatch = false;
+                if (colliders[0] != null )
+                {
+                    isCatch = true;
+                }
+            }
 
             root.Result(this);
-            
+
+            System.Array.Clear(colliders, 0, colliders.Length);
+
             yield return null;
         }
     }
 
     private void OnDrawGizmos()
     {
-        //Gizmos.color = Color.blue;
-        //Gizmos.DrawWireSphere(
-        //    transform.position,
-        //       unitInfo.DetectionRange);
-
         Handles.color = Color.blue;
         Handles.DrawWireArc(transform.position , Vector3.up , -transform.position , 360.0f , 6.0f);
     }
 
 }
 
+public class TimeOut_Delay : TimeOut
+{
+    public override bool ChackCondition(Unit _unit)
+    {
+        currentTime += Time.deltaTime;
+        if (timeOut <= currentTime)
+            return true;
+
+        return false;
+    }
+
+    public override bool Result(Unit _unit)
+    {
+        if (ChackCondition(_unit))
+        {
+            if (childTask.Result(_unit))
+            {
+                currentTime = 0.0f;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public override void SetTask(Task _task)
+    {
+        childTask = _task;
+    }
+
+    public override void SetTime(float _time)
+    {
+        timeOut = _time;
+        currentTime = 0.0f;
+    }
+}
 public class Condition_isFind : Condition
 {
-    public float time;
     public override bool ChackCondition(Unit _unit)
     {
         //발견 못했다면
         if (!_unit.GetComponent<BatController>().isCatch)
         {
-            if (time > 3.0f)
-            {
-                return true;
-            }
-            else
-            {
-                time += Time.deltaTime;
-            }
-            
+            return true;
         }
 
         return false;
-        
+
     }
     public override bool Result(Unit _unit)
     {
@@ -117,7 +144,41 @@ public class Condition_isFind : Condition
         {
             if (childTask.Result(_unit))
             {
-                time = 0.0f;
+                return true;
+            }
+        }
+        return false;
+    }
+    public override void SetTask(Task _task)
+    {
+        childTask = _task;
+    }
+
+}
+public class Condition_inAttackRange : Condition
+{
+    public override bool ChackCondition(Unit _unit)
+    {
+        int find = Physics.OverlapSphereNonAlloc(
+                   _unit.GetComponent<BatController>().transform.position,
+                   _unit.GetComponent<BatController>().unitInfo.AttackRange,
+                   _unit.GetComponent<BatController>().colliders,
+                   _unit.GetComponent<BatController>().targerLayer);
+
+        if (_unit.GetComponent<BatController>().colliders[0] == null)
+        {
+            return true;
+        }
+
+        return false;
+
+    }
+    public override bool Result(Unit _unit)
+    {
+        if (ChackCondition(_unit))
+        {
+            if (childTask.Result(_unit))
+            {
                 return true;
             }
         }
@@ -153,27 +214,6 @@ public class Condition_isDead : Condition
     public override void SetTask(Task _task)
     {
         childTask = _task;
-    }
-}
-public class Condition_AttactRagne : Condition
-{
-    public override void SetTask(Task _task) { childTask = _task; }
-    public override bool ChackCondition(Unit _unit)
-    {
-        if (_unit.GetComponent<BatController>().inAttackRange)
-        {
-            return false;
-        }
-        return true;
-    }
-    public override bool Result(Unit _unit)
-    {
-        //공격범위 밖에 있다면 실행
-        if (ChackCondition(_unit))
-        {
-            return childTask.Result(_unit);
-        }
-        return false;
     }
 }
 public class Action_Roaming : ActionTask
@@ -232,6 +272,8 @@ public class Action_Roaming : ActionTask
 }
 public class Action_Trace : ActionTask
 {
+    public Unit targetUnit;
+    public Vector3 direction;
     public override bool OnEnd(Unit _unit)
     {
         return true;
@@ -239,12 +281,37 @@ public class Action_Trace : ActionTask
 
     public override void OnStart(Unit _unit)
     {
-        isStart = false;
+        isStart = true;
+        foreach (Collider i in ((BatController)_unit).colliders)
+        {
+            if ( !i.gameObject.GetComponent<Unit>().isDead )
+            {
+                targetUnit = i.gameObject.GetComponent<Unit>();
+                break;
+            }
+        }
     }
 
     public override bool OnUpdate(Unit _unit)
     {
-        return true;
+        //((BatController)_unit).transform.rotation =
+        //    Quaternion.Lerp(
+        //       ((BatController)_unit).transform.rotation,
+        //       Quaternion.LookRotation(direction.normalized),
+        //       15.0f * Time.deltaTime);
+
+        //((BatController)_unit).transform.Translate(direction.normalized * _unit.unitInfo.MoveSpeed * Time.deltaTime, Space.World);
+
+        //float scale = Vector3.SqrMagnitude( ((User)targetUnit).ModelTransform.position - ((BatController)_unit).transform.position);
+
+        //((BatController)_unit).animatorController.SetBool("Move", true);
+        //if (1.0f > scale)
+        //{
+        //    return true;
+        //}
+
+
+        return false;
     }
 
     public override bool Result(Unit _unit)

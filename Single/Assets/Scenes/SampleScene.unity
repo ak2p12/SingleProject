@@ -521,6 +521,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc0a38e6b805dd44d9fb660cfae7d20c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDead: 0
   animatorController: {fileID: 0}
   enemyCharacter: {fileID: 0}
   colliders: []
@@ -530,6 +531,7 @@ MonoBehaviour:
   isCatch: 0
   inAttackRange: 0
   targetPosition: {x: 0, y: 0, z: 0}
+  line: {fileID: 0}
 --- !u!4 &1184204789
 Transform:
   m_ObjectHideFlags: 0
@@ -567,7 +569,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1255748688}
-  - component: {fileID: 1255748687}
+  - component: {fileID: 1255748685}
   - component: {fileID: 1255748686}
   m_Layer: 8
   m_Name: User
@@ -576,6 +578,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1255748685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255748684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9683ae610896a1d4f883501156365e54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDead: 0
+  Control: {fileID: 0}
+  ModelPosition: {fileID: 1724586672}
 --- !u!114 &1255748686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,18 +609,6 @@ MonoBehaviour:
   targerLayer:
     serializedVersion: 2
     m_Bits: 512
---- !u!114 &1255748687
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1255748684}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9683ae610896a1d4f883501156365e54, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1255748688
 Transform:
   m_ObjectHideFlags: 0

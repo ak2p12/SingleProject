@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 
 public class UserController : MonoBehaviour
 {
-    private UserMain userMain;
+    private User user;
     private Camera userCamera;
     private Ray ray;
     private RaycastHit rayHit;
@@ -43,7 +43,7 @@ public class UserController : MonoBehaviour
         userCamera = GameObject.Find("UserCamera").GetComponent<Camera>();
         userCharacter = GetComponentInChildren<Animator>().gameObject;
         isMovingKey = false;
-        userMain = GetComponent<UserMain>();
+        user = GetComponent<User>();
         StartCoroutine(Input_Coroutine());
     }
 
