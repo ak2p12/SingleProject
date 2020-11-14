@@ -119,8 +119,9 @@ public abstract class Condition : Decorator
 
 public abstract class TimeOut : Decorator
 {
-    protected float timeOut;
+    protected float timeDelay;
     protected float currentTime;
+    protected float originTime;
 
     public abstract override void SetTask(Task _task);
     public abstract void SetTime(float _time);

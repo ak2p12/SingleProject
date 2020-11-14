@@ -63,7 +63,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Bleck.cs" />
+    <Compile Include="Assets\Scripts\Blackboard.cs" />
     <Compile Include="Assets\Scripts\Enemy\BatController.cs" />
     <Compile Include="Assets\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\Scripts\GlobalClass.cs" />

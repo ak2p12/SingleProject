@@ -6,7 +6,9 @@ using UnityEngine;
 
 public class BatController : Unit
 {
-    public LayerMask targetLayer;
+    public LayerMask targetLayer;       //목표
+    public Vector3 targetPoint;         //목표 이동지점
+    public Vector3 targetDirection;           //목표방향
 
     [HideInInspector] public Animator animatorController;
     [HideInInspector] public GameObject enemyCharacter;
@@ -25,8 +27,8 @@ public class BatController : Unit
     [HideInInspector] public Condition_isFind condition_isFine;
     [HideInInspector] public Condition_inAttackRange condition_inAttackRange;
     
-    [HideInInspector] public TimeOut_Delay timeOut_RoamingDelay;
-    [HideInInspector] public TimeOut_Delay timeOut_AttackDelay;
+    [HideInInspector] public TimeDelay timeOut_RoamingDelay;
+    [HideInInspector] public TimeDelay timeOut_AttackDelay;
     [HideInInspector] public Action_Roaming roaming;
     [HideInInspector] public Action_Trace trace;
     [HideInInspector] public Action_Attack attack;
@@ -40,8 +42,8 @@ public class BatController : Unit
         condition_isDead = new Condition_isDead();
         condition_isFine = new Condition_isFind();
         condition_inAttackRange = new Condition_inAttackRange();
-        timeOut_RoamingDelay = new TimeOut_Delay();
-        timeOut_AttackDelay = new TimeOut_Delay();
+        timeOut_RoamingDelay = new TimeDelay();
+        timeOut_AttackDelay = new TimeDelay();
         roaming = new Action_Roaming();
         trace = new Action_Trace();
         attack = new Action_Attack();
@@ -53,12 +55,12 @@ public class BatController : Unit
         
         selecter_1.AddTask(timeOut_RoamingDelay);
 
-        condition_inAttackRange.SetTask(trace);
-        selecter_1.AddTask(condition_inAttackRange);
+        //condition_inAttackRange.SetTask(trace);
+        //selecter_1.AddTask(condition_inAttackRange);
 
-        timeOut_AttackDelay.SetTask(attack);
-        timeOut_AttackDelay.SetTime(1.5f);
-        selecter_1.AddTask(timeOut_AttackDelay);
+        //timeOut_AttackDelay.SetTask(attack);
+        //timeOut_AttackDelay.SetTime(1.5f);
+        //selecter_1.AddTask(timeOut_AttackDelay);
 
         sequence_1.AddTask(selecter_1);
 
@@ -82,24 +84,23 @@ public class BatController : Unit
         {
             System.Array.Clear(colliders, 0, colliders.Length);
 
-            ////적를 발견했습니까?
-            //if (!isCatch)
-            //{
-            //    int find = Physics.OverlapSphereNonAlloc(
-            //       transform.position,
-            //       unitInfo.DetectionRange,
-            //       colliders,
-            //       targetLayer);
-
-            //    if (colliders[0] != null)
-            //    {
-            //        target = colliders[0].gameObject.GetComponentInParent<Unit>();
-            //        animatorController.SetBool("Combat" , true);
-            //        isCatch = true;
-            //    }
-            //}
-
             root.Result(this);
+
+            //적를 발견했습니까?
+            if (!isCatch)
+            {
+                int find = Physics.OverlapSphereNonAlloc(
+                   transform.position,
+                   unitInfo.DetectionRange,
+                   colliders,
+                   targetLayer);
+
+                if (colliders[0] != null)
+                    isCatch = true;
+            }
+
+            Move();
+
 
             yield return null;
         }
@@ -114,41 +115,46 @@ public class BatController : Unit
         Handles.DrawWireArc(transform.position, Vector3.up, -transform.position, 360.0f, unitInfo.AttackRange);
     }
 
-}
-
-public class TimeOut_Delay : TimeOut
-{
-    public override bool ChackCondition(Unit _unit)
+    public void Move()
     {
-        currentTime += Time.deltaTime;
-        if (timeOut <= currentTime)
-            return true;
-
-        return false;
+        transform.Translate(targetDirection.normalized * unitInfo.MoveSpeed * Time.deltaTime,Space.World);
+        
+        if (targetDirection != Vector3.zero)
+        {
+            transform.rotation = Quaternion.Lerp(
+            transform.rotation,
+            Quaternion.LookRotation(targetDirection.normalized),
+            15.0f * Time.deltaTime);
+        }
     }
 
+}
+
+public class TimeDelay : TimeOut
+{
+    public override bool ChackCondition(Unit _unit){return false;}
     public override bool Result(Unit _unit)
     {
-        if (ChackCondition(_unit))
+        if (originTime == 0.0f)
         {
-            if (childTask.Result(_unit))
-            {
-                currentTime = 0.0f;
+            originTime = Time.time;
+            return false;
+        }
+        else
+        {
+            float time = originTime - Time.time;
+            currentTime += time;
+
+            if (currentTime >= timeDelay)
                 return true;
-            }
         }
         return false;
     }
 
-    public override void SetTask(Task _task)
-    {
-        childTask = _task;
-    }
-
+    public override void SetTask(Task _task) {}
     public override void SetTime(float _time)
     {
-        timeOut = _time;
-        currentTime = 0.0f;
+        timeDelay = _time;
     }
 }
 public class Condition_isFind : Condition
@@ -158,31 +164,15 @@ public class Condition_isFind : Condition
         //발견 못했다면
         if (((BatController)_unit).isCatch == false)
         {
-            int find = Physics.OverlapSphereNonAlloc(
-                 ((BatController)_unit).transform.position,
-                 ((BatController)_unit).unitInfo.DetectionRange,
-                 ((BatController)_unit).colliders,
-                 ((BatController)_unit).targetLayer);
-
-            if (((BatController)_unit).colliders[0] != null)
-            {
-                ((BatController)_unit).animatorController.SetBool("Combat", true);
-                ((BatController)_unit).target = ((BatController)_unit).colliders[0].gameObject.GetComponentInParent<Unit>();
-                ((BatController)_unit).isCatch = true;
-                return false;
-            }
-
             return true;
-
         }
 
         return false;
-
     }
     public override bool Result(Unit _unit)
     {
         //발견 못하면 실행
-        if (ChackCondition(_unit))
+        if ( ChackCondition(_unit) )
         {
             if (childTask.Result(_unit))
             {
@@ -195,7 +185,6 @@ public class Condition_isFind : Condition
     {
         childTask = _task;
     }
-
 }
 public class Condition_inAttackRange : Condition
 {
@@ -268,65 +257,30 @@ public class Condition_isDead : Condition
 }
 public class Action_Roaming : ActionTask
 {
-    public Vector3 roamingPoint;
-    public Vector3 direction;
-
     public override bool OnEnd(Unit _unit)
     {
+        ((BatController)_unit).targetPoint = Vector3.zero;
+        ((BatController)_unit).targetDirection = Vector3.zero;
         isStart = false;
-        roamingPoint = Vector3.zero;
-        ((BatController)_unit).animatorController.SetBool("Move", false);
         return true;
     }
-
     public override void OnStart(Unit _unit)
     {
-        roamingPoint.x = Random.Range(-10.0f, 10.0f);
-        roamingPoint.z = Random.Range(-10.0f, 10.0f);
-        direction = roamingPoint - ((BatController)_unit).transform.position;
-        direction.y = 0.0f;
+        ((BatController)_unit).targetPoint.x = Random.Range(-10.0f , 10.0f);
+        ((BatController)_unit).targetPoint.z = Random.Range(-10.0f , 10.0f);
+        ((BatController)_unit).targetPoint.y = 0.0f;
         isStart = true;
     }
-
     public override bool OnUpdate(Unit _unit)
     {
-        ((BatController)_unit).transform.rotation =
-            Quaternion.Lerp(
-               ((BatController)_unit).transform.rotation,
-               Quaternion.LookRotation(direction.normalized),
-               15.0f * Time.deltaTime);
+        ((BatController)_unit).targetDirection = ((BatController)_unit).targetPoint - ((BatController)_unit).transform.position;
+        float scale = Vector3.SqrMagnitude( ((BatController)_unit).targetDirection);
 
-        ((BatController)_unit).transform.Translate(direction.normalized * _unit.unitInfo.MoveSpeed * Time.deltaTime, Space.World);
-
-        float scale = Vector3.SqrMagnitude(roamingPoint - ((BatController)_unit).transform.position);
-
-        ((BatController)_unit).animatorController.SetBool("Move", true);
-
-        if (1.0f > scale)
-        {
+        if (scale <= 1.0f || ((BatController)_unit).isCatch)
             return true;
-        }
-        else
-        {
-            int find = Physics.OverlapSphereNonAlloc(
-                 ((BatController)_unit).transform.position,
-                 ((BatController)_unit).unitInfo.DetectionRange,
-                 ((BatController)_unit).colliders,
-                 ((BatController)_unit).targetLayer);
-
-            if (((BatController)_unit).colliders[0] != null)
-            {
-                ((BatController)_unit).target = ((BatController)_unit).colliders[0].gameObject.GetComponentInParent<Unit>();
-                ((BatController)_unit).animatorController.SetBool("Move", false);
-                ((BatController)_unit).animatorController.SetBool("Combat", true);
-                ((BatController)_unit).isCatch = true;
-                return true;
-            }
-        }
 
         return false;
     }
-
     public override bool Result(Unit _unit)
     {
         if (!isStart)
