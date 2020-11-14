@@ -522,15 +522,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDead: 0
+  targetLayer:
+    serializedVersion: 2
+    m_Bits: 256
   animatorController: {fileID: 0}
   enemyCharacter: {fileID: 0}
   colliders: []
-  targerLayer:
-    serializedVersion: 2
-    m_Bits: 256
+  target: {fileID: 0}
   isCatch: 0
   inAttackRange: 0
-  targetPosition: {x: 0, y: 0, z: 0}
   line: {fileID: 0}
 --- !u!4 &1184204789
 Transform:
@@ -540,7 +540,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1184204787}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.86, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1913658932}
@@ -558,7 +558,7 @@ SphereCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 5
+  m_Radius: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1255748684
 GameObject:
@@ -592,7 +592,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDead: 0
   Control: {fileID: 0}
-  ModelPosition: {fileID: 1724586672}
+  ModelTransform: {fileID: 1724586672}
 --- !u!114 &1255748686
 MonoBehaviour:
   m_ObjectHideFlags: 0

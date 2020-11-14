@@ -850,8 +850,5 @@ public class UserController : MonoBehaviour
         isAttack_L1 = isAttack_L2 = isAttack_L3 = isAttack_L4 = isAttack_R1 = isAttack_R2 = isAttack_R3 = isAttack_R4 = false;
     }
 
-    private void OnDrawGizmos()
-    {
-    }
 
 }
