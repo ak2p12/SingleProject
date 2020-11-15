@@ -21,54 +21,68 @@ public class BatController : Unit
     [HideInInspector] public LineRenderer line;
 
     [HideInInspector] public BehaviorTree root;
+
     [HideInInspector] public Sequence sequence_1;
+    [HideInInspector] public Sequence sequence_2;
     [HideInInspector] public Selecter selecter_1;
-    [HideInInspector] public Condition_isDead condition_isDead;
-    [HideInInspector] public Condition_isFind condition_isFine;
-    [HideInInspector] public Condition_inAttackRange condition_inAttackRange;
-    
+
+    [HideInInspector] public Condition_Dead condition_Dead;
+    [HideInInspector] public Condition_Find condition_Fine;
+    [HideInInspector] public Condition_AttackRange condition_AttackRange;
+    [HideInInspector] public Condition_Arrive condition_Arrive;
+
     [HideInInspector] public TimeDelay timeOut_RoamingDelay;
-    [HideInInspector] public TimeDelay timeOut_AttackDelay;
+    
     [HideInInspector] public Action_Roaming roaming;
     [HideInInspector] public Action_Trace trace;
     [HideInInspector] public Action_Attack attack;
-    
+
 
     void Start()
     {
         root = new BehaviorTree();
+
         sequence_1 = new Sequence();
+        sequence_2 = new Sequence();
         selecter_1 = new Selecter();
-        condition_isDead = new Condition_isDead();
-        condition_isFine = new Condition_isFind();
-        condition_inAttackRange = new Condition_inAttackRange();
+
+        condition_Dead = new Condition_Dead();
+        condition_Fine = new Condition_Find();
+        condition_AttackRange = new Condition_AttackRange();
+        condition_Arrive = new Condition_Arrive();
+
         timeOut_RoamingDelay = new TimeDelay();
-        timeOut_AttackDelay = new TimeDelay();
+
         roaming = new Action_Roaming();
         trace = new Action_Trace();
         attack = new Action_Attack();
+
         colliders = new Collider[5];
 
-        timeOut_RoamingDelay.SetTask(roaming);
+        //========== 공격 ===================
+        condition_AttackRange.SetTask(attack);
+        selecter_1.AddTask(condition_AttackRange);
+        //===================================
+
+        //========== 추적 ===================
+        condition_Fine.SetTask(trace);
+        selecter_1.AddTask(condition_Fine);
+        //===================================
+
+        //========== 로밍 ===================
         timeOut_RoamingDelay.SetTime(3.0f);
-        condition_isFine.SetTask(timeOut_RoamingDelay);
-        
-        selecter_1.AddTask(timeOut_RoamingDelay);
-
-        //condition_inAttackRange.SetTask(trace);
-        //selecter_1.AddTask(condition_inAttackRange);
-
-        //timeOut_AttackDelay.SetTask(attack);
-        //timeOut_AttackDelay.SetTime(1.5f);
-        //selecter_1.AddTask(timeOut_AttackDelay);
+        sequence_2.AddTask(timeOut_RoamingDelay);
+        sequence_2.AddTask(roaming);
+        condition_Arrive.SetTask(sequence_2);
+        selecter_1.AddTask(condition_Arrive);
+        //==================================
 
         sequence_1.AddTask(selecter_1);
-
-        sequence_1.AddTask(condition_isDead);
+        sequence_1.AddTask(condition_Dead);
 
         root.Init(sequence_1);
 
-        unitInfo.MoveSpeed = 5.0f;
+        unitInfo.MoveSpeed = 4.0f;
         unitInfo.DetectionRange = 10.0f;
         unitInfo.AttackRange = 2.0f;
 
@@ -96,7 +110,11 @@ public class BatController : Unit
                    targetLayer);
 
                 if (colliders[0] != null)
+                {
                     isCatch = true;
+                    target = colliders[0].gameObject.GetComponentInParent<Unit>();
+                    animatorController.SetBool("Combat", true);
+                }
             }
 
             Move();
@@ -109,7 +127,7 @@ public class BatController : Unit
     private void OnDrawGizmos()
     {
         Handles.color = Color.blue;
-        Handles.DrawWireArc(transform.position , Vector3.up , -transform.position , 360.0f , unitInfo.DetectionRange);
+        Handles.DrawWireArc(transform.position, Vector3.up, -transform.position, 360.0f, unitInfo.DetectionRange);
 
         Handles.color = Color.red;
         Handles.DrawWireArc(transform.position, Vector3.up, -transform.position, 360.0f, unitInfo.AttackRange);
@@ -117,8 +135,16 @@ public class BatController : Unit
 
     public void Move()
     {
-        transform.Translate(targetDirection.normalized * unitInfo.MoveSpeed * Time.deltaTime,Space.World);
-        
+        float scale = Vector3.SqrMagnitude(targetPoint - transform.position);
+        if (scale <= 1.5f)
+        {
+            animatorController.SetBool("Move", false);
+            targetDirection = Vector3.zero;
+            return;
+        }
+
+        transform.Translate(targetDirection.normalized * unitInfo.MoveSpeed * Time.deltaTime, Space.World);
+
         if (targetDirection != Vector3.zero)
         {
             transform.rotation = Quaternion.Lerp(
@@ -126,13 +152,21 @@ public class BatController : Unit
             Quaternion.LookRotation(targetDirection.normalized),
             15.0f * Time.deltaTime);
         }
-    }
+        else if (isCatch)
+        {
+            transform.rotation = Quaternion.Lerp(
+           transform.rotation,
+           Quaternion.LookRotation( (target.GetComponent<User>().ModelTransform.position - transform.position).normalized),
+           15.0f * Time.deltaTime);
+        }
 
+        
+    }
 }
 
 public class TimeDelay : TimeOut
 {
-    public override bool ChackCondition(Unit _unit){return false;}
+    public override bool ChackCondition(Unit _unit) { return false; }
     public override bool Result(Unit _unit)
     {
         if (originTime == 0.0f)
@@ -142,27 +176,32 @@ public class TimeDelay : TimeOut
         }
         else
         {
-            float time = originTime - Time.time;
+            float time = Time.time - originTime;
             currentTime += time;
-
+            originTime = Time.time;
             if (currentTime >= timeDelay)
+            {
+                originTime = 0.0f;
+                currentTime = 0.0f;
                 return true;
+            }
+                
         }
         return false;
     }
 
-    public override void SetTask(Task _task) {}
+    public override void SetTask(Task _task) { }
     public override void SetTime(float _time)
     {
         timeDelay = _time;
     }
 }
-public class Condition_isFind : Condition
+public class Condition_Find : Condition
 {
     public override bool ChackCondition(Unit _unit)
     {
         //발견 못했다면
-        if (((BatController)_unit).isCatch == false)
+        if (((BatController)_unit).isCatch == true)
         {
             return true;
         }
@@ -172,9 +211,9 @@ public class Condition_isFind : Condition
     public override bool Result(Unit _unit)
     {
         //발견 못하면 실행
-        if ( ChackCondition(_unit) )
+        if (ChackCondition(_unit))
         {
-            if (childTask.Result(_unit))
+            if (childTask != null && childTask.Result(_unit))
             {
                 return true;
             }
@@ -186,28 +225,20 @@ public class Condition_isFind : Condition
         childTask = _task;
     }
 }
-public class Condition_inAttackRange : Condition
+public class Condition_AttackRange : Condition
 {
     public override bool ChackCondition(Unit _unit)
     {
-        if (((BatController)_unit).isCatch == true)
-        {
-            int find = Physics.OverlapSphereNonAlloc(
-                   ((BatController)_unit).transform.position,
-                   ((BatController)_unit).unitInfo.AttackRange,
-                   ((BatController)_unit).colliders,
-                   ((BatController)_unit).targetLayer);
+        //공격 범위 검사
+        int find = Physics.OverlapSphereNonAlloc(
+               ((BatController)_unit).transform.position,
+               ((BatController)_unit).unitInfo.AttackRange,
+               ((BatController)_unit).colliders,
+               ((BatController)_unit).targetLayer);
 
-            if (find == 0)
-            {
-                ((BatController)_unit).inAttackRange = false;
-                return true;
-            }
-            else
-            {
-                ((BatController)_unit).inAttackRange = true;
-                return false;
-            }
+        if (find != 0)
+        {
+            return true;
         }
 
         return false;
@@ -216,7 +247,7 @@ public class Condition_inAttackRange : Condition
     {
         if (ChackCondition(_unit))
         {
-            if (childTask.Result(_unit))
+            if (childTask != null && childTask.Result(_unit))
             {
                 return true;
             }
@@ -228,7 +259,34 @@ public class Condition_inAttackRange : Condition
         childTask = _task;
     }
 }
-public class Condition_isDead : Condition
+public class Condition_Arrive : Condition
+{
+    public override bool ChackCondition(Unit _unit)
+    {
+        if (((BatController)_unit).targetDirection == Vector3.zero)
+        {
+            return true;
+        }
+
+        return false;
+    }
+    public override bool Result(Unit _unit)
+    {
+        if (ChackCondition(_unit))
+        {
+            if (childTask != null && childTask.Result(_unit))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    public override void SetTask(Task _task)
+    {
+        childTask = _task;
+    }
+}
+public class Condition_Dead : Condition
 {
     public override bool ChackCondition(Unit _unit)
     {
@@ -259,27 +317,21 @@ public class Action_Roaming : ActionTask
 {
     public override bool OnEnd(Unit _unit)
     {
-        ((BatController)_unit).targetPoint = Vector3.zero;
-        ((BatController)_unit).targetDirection = Vector3.zero;
         isStart = false;
         return true;
     }
     public override void OnStart(Unit _unit)
     {
-        ((BatController)_unit).targetPoint.x = Random.Range(-10.0f , 10.0f);
-        ((BatController)_unit).targetPoint.z = Random.Range(-10.0f , 10.0f);
+        ((BatController)_unit).targetPoint.x = Random.Range(-10.0f, 10.0f);
         ((BatController)_unit).targetPoint.y = 0.0f;
+        ((BatController)_unit).targetPoint.z = Random.Range(-10.0f, 10.0f);
+        ((BatController)_unit).targetDirection = ((BatController)_unit).targetPoint - ((BatController)_unit).transform.position;
+        ((BatController)_unit).animatorController.SetBool("Move", true);
         isStart = true;
     }
     public override bool OnUpdate(Unit _unit)
     {
-        ((BatController)_unit).targetDirection = ((BatController)_unit).targetPoint - ((BatController)_unit).transform.position;
-        float scale = Vector3.SqrMagnitude( ((BatController)_unit).targetDirection);
-
-        if (scale <= 1.0f || ((BatController)_unit).isCatch)
-            return true;
-
-        return false;
+        return true;
     }
     public override bool Result(Unit _unit)
     {
@@ -294,34 +346,22 @@ public class Action_Roaming : ActionTask
 }
 public class Action_Trace : ActionTask
 {
-    public Vector3 direction;
-
     public override bool OnEnd(Unit _unit)
     {
-        //((BatController)_unit).animatorController.SetBool("Move", false);
         isStart = false;
         return true;
     }
 
     public override void OnStart(Unit _unit)
     {
+        ((BatController)_unit).targetPoint = ((User)((BatController)_unit).target).ModelTransform.position;
+        ((BatController)_unit).targetDirection = ((BatController)_unit).targetPoint - ((BatController)_unit).transform.position;
         ((BatController)_unit).animatorController.SetBool("Move", true);
         isStart = true;
     }
 
     public override bool OnUpdate(Unit _unit)
     {
-        Vector3 targetPosition = ((User)((BatController)_unit).target).ModelTransform.position;
-        direction = targetPosition - ((BatController)_unit).transform.position;
-
-        ((BatController)_unit).transform.rotation =
-            Quaternion.Lerp(
-               ((BatController)_unit).transform.rotation,
-               Quaternion.LookRotation(direction.normalized),
-               15.0f * Time.deltaTime);
-
-        ((BatController)_unit).transform.Translate(direction.normalized * (_unit.unitInfo.MoveSpeed * 0.9f) * Time.deltaTime, Space.World);
-
         return true;
     }
 
@@ -338,8 +378,6 @@ public class Action_Trace : ActionTask
 }
 public class Action_Attack : ActionTask
 {
-    public Vector3 direction;
-
     public override bool OnEnd(Unit _unit)
     {
         isStart = false;
@@ -348,33 +386,16 @@ public class Action_Attack : ActionTask
 
     public override void OnStart(Unit _unit)
     {
-        ((BatController)_unit).animatorController.SetBool("Move" , false);
         ((BatController)_unit).animatorController.SetTrigger("Attack");
+        ((BatController)_unit).animatorController.SetBool("Move" , false);
+        ((BatController)_unit).targetDirection = Vector3.zero;
+
         isStart = true;
     }
 
     public override bool OnUpdate(Unit _unit)
     {
-        if (((BatController)_unit).isCatch == true  && ((BatController)_unit).inAttackRange == true)
-        {
-            Vector3 targetPosition = ((User)((BatController)_unit).target).ModelTransform.position;
-            direction = targetPosition - ((BatController)_unit).transform.position;
-
-            ((BatController)_unit).transform.rotation =
-                Quaternion.Lerp(
-                   ((BatController)_unit).transform.rotation,
-                   Quaternion.LookRotation(direction.normalized),
-                   15.0f * Time.deltaTime);
-
-
-            if (((BatController)_unit).animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack") &&
-               ((BatController)_unit).animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return true;
     }
 
     public override bool Result(Unit _unit)
