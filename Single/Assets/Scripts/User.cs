@@ -15,15 +15,7 @@ public class User : Unit
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Q))
-        {
-            unitInfo.MoveSpeed += 0.1f;
-        }
 
-        if (Input.GetKey(KeyCode.E))
-        {
-            unitInfo.MoveSpeed -= 0.1f;
-        }
     }
 
     public UnitInformation GetUnitInfomation()

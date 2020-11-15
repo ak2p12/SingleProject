@@ -704,7 +704,11 @@ public class UserController : MonoBehaviour
 
         if ( ( Physics.Raycast(ray, out rayHit, 50.0f, 1 << LayerMask.NameToLayer("Land")) ) && (rollCheck == false) )
         {
-            userCharacter.transform.LookAt(rayHit.point, Vector3.up);
+            userCharacter.transform.rotation = Quaternion.Lerp(
+           userCharacter.transform.rotation,
+           Quaternion.LookRotation((rayHit.point - userCharacter.transform.position).normalized),
+           30.0f * Time.deltaTime);
+
             Debug.DrawLine(userCharacter.transform.position, rayHit.point);
             Debug.DrawLine(userCharacter.transform.position + userCharacter.transform.forward, rayHit.point, Color.red);
         }

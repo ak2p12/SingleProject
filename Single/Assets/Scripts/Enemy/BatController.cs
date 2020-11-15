@@ -159,8 +159,6 @@ public class BatController : Unit
            Quaternion.LookRotation( (target.GetComponent<User>().ModelTransform.position - transform.position).normalized),
            15.0f * Time.deltaTime);
         }
-
-        
     }
 }
 
