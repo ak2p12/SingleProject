@@ -729,8 +729,7 @@ ModelImporter:
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
       might lower retargeting quality:\nNote: Activate translation DOF on avatar
       to improve retargeting quality.\n\t'B_Spine' has translation animation that
-      will be discarded.\nEvent Event_Roll_End has a time (0.435109) outside the
-      clip's valid range (0.000000..0.433333). It will never be fired"
+      will be discarded.\n"
     animationRetargetingWarnings: "\nRetargeting quality report for clip 'Take 001':\n\tLeftUpperArm
       average position error 15.8 mm and maximum position error 38.5 mm at time 0:24
       (82.8%) Frame 24\n\tLeftLowerArm average position error 15.8 mm and maximum
@@ -777,7 +776,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: RollStart
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: f03cfcd0e4c3a1944a4c15ce2bd491c6,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {fileID: 101100000, guid: 3e4e408fdcc93ee468a1275b69104d63, type: 2}
@@ -945,7 +952,15 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.8421052
+        functionName: RollEnd
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 9683ae610896a1d4f883501156365e54,
+          type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask:
       - path: 
         weight: 1

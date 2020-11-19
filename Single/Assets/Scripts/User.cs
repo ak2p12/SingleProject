@@ -5,7 +5,7 @@ using UnityEngine;
 public class User : Unit
 {
     [HideInInspector] public UserController Control;
-    public Transform ModelTransform;
+    //public Transform ModelTransform;
 
     void Start()
     {

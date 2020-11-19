@@ -156,7 +156,7 @@ public class BatController : Unit
         {
             transform.rotation = Quaternion.Lerp(
            transform.rotation,
-           Quaternion.LookRotation( (target.GetComponent<User>().ModelTransform.position - transform.position).normalized),
+           Quaternion.LookRotation( (target.GetComponent<User>().transform.position - transform.position).normalized),
            15.0f * Time.deltaTime);
         }
     }
@@ -352,7 +352,7 @@ public class Action_Trace : ActionTask
 
     public override void OnStart(Unit _unit)
     {
-        ((BatController)_unit).targetPoint = ((User)((BatController)_unit).target).ModelTransform.position;
+        ((BatController)_unit).targetPoint = ((User)((BatController)_unit).target).transform.position;
         ((BatController)_unit).targetDirection = ((BatController)_unit).targetPoint - ((BatController)_unit).transform.position;
         ((BatController)_unit).animatorController.SetBool("Move", true);
         isStart = true;
