@@ -70,7 +70,8 @@
     <Compile Include="Assets\Scripts\GlobalClass.cs" />
     <Compile Include="Assets\Scripts\GlobalEnum.cs" />
     <Compile Include="Assets\Scripts\GlobalStruct.cs" />
-    <Compile Include="Assets\Scripts\Item.cs" />
+    <Compile Include="Assets\Scripts\Item\Item.cs" />
+    <Compile Include="Assets\Scripts\Item\TwoHandSword.cs" />
     <Compile Include="Assets\Scripts\ManagerRule.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\User.cs" />

@@ -16,9 +16,9 @@ public enum USER_WEAPON
     END
 }
 
-public enum USER_ITEM
+public enum ITEM_TYPE
 {
     CONSUMABLE_HPRECOVERY,
-    WEAPON_2HANDSWORD,
+    WEAPON_TWOHANDSWORD,
     END
 }
