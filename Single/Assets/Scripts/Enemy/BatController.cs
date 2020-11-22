@@ -7,8 +7,8 @@ using UnityEngine;
 public class BatController : Unit
 {
     public LayerMask targetLayer;       //목표
-    public Vector3 targetPoint;         //목표 이동지점
-    public Vector3 targetDirection;           //목표방향
+    [HideInInspector] public Vector3 targetPoint;         //목표 이동지점
+    [HideInInspector] public Vector3 targetDirection;           //목표방향
 
     [HideInInspector] public Animator animatorController;
     [HideInInspector] public GameObject enemyCharacter;
@@ -36,7 +36,7 @@ public class BatController : Unit
     [HideInInspector] public Action_Roaming roaming;
     [HideInInspector] public Action_Trace trace;
     [HideInInspector] public Action_Attack attack;
-
+    [HideInInspector] public Action_Dead dead;
 
     void Start()
     {
@@ -56,6 +56,7 @@ public class BatController : Unit
         roaming = new Action_Roaming();
         trace = new Action_Trace();
         attack = new Action_Attack();
+        dead = new Action_Dead();
 
         colliders = new Collider[5];
 
@@ -78,52 +79,73 @@ public class BatController : Unit
         //==================================
 
         sequence_1.AddTask(selecter_1);
+        condition_Dead.SetTask(dead);
         sequence_1.AddTask(condition_Dead);
 
         root.Init(sequence_1);
-
-        unitInfo.MoveSpeed = 4.0f;
-        unitInfo.DetectionRange = 10.0f;
-        unitInfo.AttackRange = 2.0f;
 
         enemyCharacter = GetComponentInChildren<Animator>().gameObject;
         animatorController = GetComponentInChildren<Animator>();
         StartCoroutine(Update_Coroution());
 
     }
-
+    private void OnEnable()
+    {
+        unitInfo.MoveSpeed = 4.0f;
+        unitInfo.DetectionRange = 10.0f;
+        unitInfo.AttackRange = 2.0f;
+        unitInfo.CurrentHP = unitInfo.MaxHP = 100.0f;
+        unitInfo.AttackPower = 10.0f;
+        isCatch = false;
+        inAttackRange = false;
+        isDead = false;
+        DestoryTime = 4.0f;
+    }
     IEnumerator Update_Coroution()
     {
         while (true)
         {
             System.Array.Clear(colliders, 0, colliders.Length);
 
-            root.Result(this);
-
-            //적를 발견했습니까?
-            if (!isCatch)
+            if (root.Result(this))
             {
-                int find = Physics.OverlapSphereNonAlloc(
-                   transform.position,
-                   unitInfo.DetectionRange,
-                   colliders,
-                   targetLayer);
-
-                if (colliders[0] != null)
+                DestoryTime -= Time.deltaTime;
+                if (0.0f >= DestoryTime )
                 {
-                    isCatch = true;
-                    target = colliders[0].gameObject.GetComponentInParent<Unit>();
-                    animatorController.SetBool("Combat", true);
+                    root.endRoot = false;
+                    StopCoroutine(Update_Coroution());
+                    this.gameObject.SetActive(false);
+                    yield break;
                 }
             }
+            else
+            {
+                if (unitInfo.CurrentHP <= 0.0f)
+                    isDead = true;
 
-            Move();
+                //적를 발견했습니까?
+                if (!isCatch)
+                {
+                    int find = Physics.OverlapSphereNonAlloc(
+                       transform.position,
+                       unitInfo.DetectionRange,
+                       colliders,
+                       targetLayer);
 
+                    if (colliders[0] != null)
+                    {
+                        isCatch = true;
+                        target = colliders[0].gameObject.GetComponentInParent<Unit>();
+                        animatorController.SetBool("Combat", true);
+                    }
+                }
+
+                Move();
+            }
 
             yield return null;
         }
     }
-
     private void OnDrawGizmos()
     {
         Handles.color = Color.blue;
@@ -131,8 +153,9 @@ public class BatController : Unit
 
         Handles.color = Color.red;
         Handles.DrawWireArc(transform.position, Vector3.up, -transform.position, 360.0f, unitInfo.AttackRange);
-    }
 
+        //Gizmos.DrawWireSphere(transform.position + (transform.forward * 1.7f) , 1.0f);
+    }
     public void Move()
     {
         float scale = Vector3.SqrMagnitude(targetPoint - transform.position);
@@ -158,6 +181,24 @@ public class BatController : Unit
            transform.rotation,
            Quaternion.LookRotation( (target.GetComponent<User>().transform.position - transform.position).normalized),
            15.0f * Time.deltaTime);
+        }
+    }
+    public void Attack()
+    {
+        int find = Physics.OverlapSphereNonAlloc(
+                            transform.position + (transform.forward * 1.7f),
+                            1.0f,
+                            colliders,
+                            targetLayer);
+
+        if (0 != find)
+        {
+            foreach (Collider collider in colliders)
+            {
+                if (null == collider)
+                    continue;
+                collider.gameObject.GetComponent<Unit>().unitInfo.CurrentHP -= (unitInfo.AttackPower);
+            }
         }
     }
 }
@@ -301,7 +342,10 @@ public class Condition_Dead : Condition
         //발견 못하면 실행
         if (ChackCondition(_unit))
         {
-            return true;
+            if (childTask != null && childTask.Result(_unit))
+            {
+                return true;
+            }
         }
         return false;
     }
@@ -388,6 +432,36 @@ public class Action_Attack : ActionTask
         ((BatController)_unit).animatorController.SetBool("Move" , false);
         ((BatController)_unit).targetDirection = Vector3.zero;
 
+        isStart = true;
+    }
+
+    public override bool OnUpdate(Unit _unit)
+    {
+        return true;
+    }
+
+    public override bool Result(Unit _unit)
+    {
+        if (!isStart)
+            OnStart(_unit);
+
+        if (OnUpdate(_unit))
+            return OnEnd(_unit);
+
+        return false;
+    }
+}
+public class Action_Dead : ActionTask
+{
+    public override bool OnEnd(Unit _unit)
+    {
+        isStart = false;
+        return true;
+    }
+
+    public override void OnStart(Unit _unit)
+    {
+        ((BatController)_unit).animatorController.SetTrigger("Dead");
         isStart = true;
     }
 

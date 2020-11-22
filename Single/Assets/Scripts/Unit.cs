@@ -6,4 +6,5 @@ public abstract class Unit : MonoBehaviour
 {
     public UnitInformation unitInfo;
     public bool isDead;
+    public float DestoryTime;
 }
