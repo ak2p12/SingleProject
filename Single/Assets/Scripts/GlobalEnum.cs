@@ -13,6 +13,7 @@
 public enum USER_WEAPON
 {
     BAREHANDS,
+    TWOHANDSWORD,
     END
 }
 

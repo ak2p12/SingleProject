@@ -64,7 +64,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\Blackboard.cs" />
     <Compile Include="Assets\Scripts\Enemy\BatController.cs" />
     <Compile Include="Assets\Scripts\FollowCamera.cs" />
     <Compile Include="Assets\Scripts\GlobalClass.cs" />
@@ -72,7 +71,6 @@
     <Compile Include="Assets\Scripts\GlobalStruct.cs" />
     <Compile Include="Assets\Scripts\Item\Item.cs" />
     <Compile Include="Assets\Scripts\Item\TwoHandSword.cs" />
-    <Compile Include="Assets\Scripts\ManagerRule.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\User.cs" />
     <Compile Include="Assets\Scripts\UserController.cs" />

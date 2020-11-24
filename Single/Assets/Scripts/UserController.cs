@@ -861,4 +861,9 @@ public class UserController : MonoBehaviour
         rollCheck = false;
     }
 
+    public void Addweapon()
+    {
+
+    }
+
 }
