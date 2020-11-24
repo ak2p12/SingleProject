@@ -58,7 +58,7 @@ public class UserController : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                animatorController.SetTrigger("Roll_Start_Trigger");
+                animatorController.SetTrigger("Roll_Trigger");
             }
 
             //마우스 왼클릭
@@ -154,7 +154,7 @@ public class UserController : MonoBehaviour
                         break;
                     case USER_WEAPON.TWOHANDSWORD:
                         animatorController.SetTrigger("2HandSword_Swith_Back");
-
+                        animatorController.SetInteger("UseWeapon" , (int)user.haveWeapon_1 );
                         break;
                     case USER_WEAPON.END:
                         break;
@@ -169,12 +169,13 @@ public class UserController : MonoBehaviour
                     case USER_WEAPON.BAREHANDS:
                         break;
                     case USER_WEAPON.TWOHANDSWORD:
-                        //animatorController.SetTrigger("2HandSword_Swith_Back");
+                        animatorController.SetTrigger("2HandSword_Swith_Hips");
+                        animatorController.SetInteger("UseWeapon", (int)user.haveWeapon_2);
                         break;
                     case USER_WEAPON.END:
                         break;
                 }
-                animatorController.SetTrigger("2HandSword_Swith_Back");
+                user.currentWeapon = user.haveWeapon_2;
             }
         }
         else
@@ -903,10 +904,16 @@ public class UserController : MonoBehaviour
     {
         rollCheck = false;
     }
-
-    public void Addweapon()
+    public void UseWeaponAnimationReset(USER_WEAPON _useWeapon)
     {
-
+        switch (_useWeapon)
+        {
+            case USER_WEAPON.BAREHANDS:
+                break;
+            case USER_WEAPON.TWOHANDSWORD:
+                break;
+            case USER_WEAPON.END:
+                break;
+        }
     }
-
 }

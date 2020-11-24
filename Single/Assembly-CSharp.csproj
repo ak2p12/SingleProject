@@ -66,9 +66,9 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\Enemy\BatController.cs" />
     <Compile Include="Assets\Scripts\FollowCamera.cs" />
-    <Compile Include="Assets\Scripts\GlobalClass.cs" />
-    <Compile Include="Assets\Scripts\GlobalEnum.cs" />
-    <Compile Include="Assets\Scripts\GlobalStruct.cs" />
+    <Compile Include="Assets\Scripts\Global\GlobalClass.cs" />
+    <Compile Include="Assets\Scripts\Global\GlobalEnum.cs" />
+    <Compile Include="Assets\Scripts\Global\GlobalStruct.cs" />
     <Compile Include="Assets\Scripts\Item\Item.cs" />
     <Compile Include="Assets\Scripts\Item\TwoHandSword.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
