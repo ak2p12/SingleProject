@@ -8,7 +8,9 @@ public class User : Unit
     [HideInInspector] public Collider[] colliders;
 
     public LayerMask targetLayer;
-    public USER_WEAPON userWeapon;
+    public USER_WEAPON currentWeapon;
+    public USER_WEAPON haveWeapon_1;
+    public USER_WEAPON haveWeapon_2;
 
     [HideInInspector] public bool Attack_L1;
     [HideInInspector] public bool Attack_L2;
@@ -29,9 +31,11 @@ public class User : Unit
     }
     void Start()
     {
+        haveWeapon_1 = USER_WEAPON.BAREHANDS;
+        haveWeapon_2 = USER_WEAPON.BAREHANDS;
         colliders = new Collider[10];
         Control = GetComponent<UserController>();
-        userWeapon = USER_WEAPON.BAREHANDS;
+        currentWeapon = USER_WEAPON.BAREHANDS;
         StartCoroutine(Update_Coroution());
     }
 
@@ -39,6 +43,7 @@ public class User : Unit
     {
         while (true)
         {
+            
             yield return null;
         }
     }
@@ -52,7 +57,7 @@ public class User : Unit
     {
         System.Array.Clear(colliders, 0, colliders.Length);
 
-        switch (userWeapon)
+        switch (currentWeapon)
         {
             case USER_WEAPON.BAREHANDS: //맨손
                 {

@@ -36,6 +36,17 @@ public class TwoHandSword : MonoBehaviour
 
             if (null != targetCollider[0])
             {
+                //해당 캐릭터 1번장비가 없다면
+                if (USER_WEAPON.BAREHANDS == targetCollider[0].transform.GetComponent<User>().haveWeapon_1)
+                {
+                    targetCollider[0].transform.GetComponent<User>().haveWeapon_1 = USER_WEAPON.TWOHANDSWORD;
+                }
+                //해당 캐릭터 2번장비가 없다면
+                else if (USER_WEAPON.BAREHANDS == targetCollider[0].transform.GetComponent<User>().haveWeapon_2)
+                {
+                    targetCollider[0].transform.GetComponent<User>().haveWeapon_2 = USER_WEAPON.TWOHANDSWORD;
+                }
+
                 this.gameObject.SetActive(false);
                 yield break;
                 //무기 흭득

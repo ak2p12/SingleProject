@@ -53,95 +53,138 @@ public class UserController : MonoBehaviour
     }
     private void Action_Input()
     {
-        //구르기 회피 
-        if (Input.GetKeyDown(KeyCode.Space) && rollCheck == false)
+        //구르기
+        if (rollCheck == false)
         {
-            animatorController.SetTrigger("Roll_Start_Trigger");
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                animatorController.SetTrigger("Roll_Start_Trigger");
+            }
+
+            //마우스 왼클릭
+            if (Input.GetMouseButton(0))
+            {
+                if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L3") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R3")) &&
+                    animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                {
+                    if (!user.Attack_L4 && (user.Attack_L3 || user.Attack_R3))
+                    {
+                        user.Attack_L4 = true;
+                        animatorController.SetTrigger("Attack_L4");
+                    }
+                }
+                else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L2") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R2")) &&
+                    animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                {
+                    if (!user.Attack_L3 && (user.Attack_L2 || user.Attack_R2))
+                    {
+                        user.Attack_L3 = true;
+                        animatorController.SetTrigger("Attack_L3");
+                    }
+                }
+                else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L1") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R1")) &&
+                    animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                {
+                    if (!user.Attack_L2 && (user.Attack_L1 || user.Attack_R1))
+                    {
+                        user.Attack_L2 = true;
+                        animatorController.SetTrigger("Attack_L2");
+                    }
+
+                }
+                else
+                {
+                    if (!user.Attack_L1 && !user.Attack_R1)
+                    {
+                        user.Attack_L1 = true;
+                        animatorController.SetTrigger("Attack_L1");
+                    }
+                }
+
+            }
+            //마우스 오른클릭
+            else if (Input.GetMouseButton(1))
+            {
+                if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L3") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R3")) &&
+                     animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                {
+                    if (!user.Attack_R4 && (user.Attack_L3 || user.Attack_R3))
+                    {
+                        user.Attack_R4 = true;
+                        animatorController.SetTrigger("Attack_R4");
+                    }
+                }
+                else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L2") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R2")) &&
+                    animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
+                {
+                    if (!user.Attack_R3 && (user.Attack_L2 || user.Attack_R2))
+                    {
+
+                        user.Attack_R3 = true;
+                        animatorController.SetTrigger("Attack_R3");
+                    }
+                }
+                else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L1") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R1")) &&
+
+                    (animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.6f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f))
+                {
+                    if (!user.Attack_R2 && (user.Attack_L1 || user.Attack_R1))
+                    {
+                        user.Attack_R2 = true;
+                        animatorController.SetTrigger("Attack_R2");
+                    }
+                }
+                else
+                {
+                    if (!user.Attack_L1 && !user.Attack_R1)
+                    {
+                        user.Attack_R1 = true;
+                        animatorController.SetTrigger("Attack_R1");
+                    }
+                }
+
+            }
+
+            //1번 장비
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                switch (user.haveWeapon_1)
+                {
+                    case USER_WEAPON.BAREHANDS:
+                        break;
+                    case USER_WEAPON.TWOHANDSWORD:
+                        animatorController.SetTrigger("2HandSword_Swith_Back");
+
+                        break;
+                    case USER_WEAPON.END:
+                        break;
+                }
+
+                user.currentWeapon = user.haveWeapon_1;
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                switch (user.haveWeapon_2)
+                {
+                    case USER_WEAPON.BAREHANDS:
+                        break;
+                    case USER_WEAPON.TWOHANDSWORD:
+                        //animatorController.SetTrigger("2HandSword_Swith_Back");
+                        break;
+                    case USER_WEAPON.END:
+                        break;
+                }
+                animatorController.SetTrigger("2HandSword_Swith_Back");
+            }
+        }
+        else
+        {
+            
         }
 
-        //마우스 왼클릭
-        if (Input.GetMouseButton(0))
-        {
-            if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L3") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R3")) &&
-                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
-            {
-                if (!user.Attack_L4 && (user.Attack_L3 || user.Attack_R3))
-                {
-                    user.Attack_L4 = true;
-                    animatorController.SetTrigger("Attack_L4");
-                }
-            }
-            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L2") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R2")) &&
-                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
-            {
-                if (!user.Attack_L3 && (user.Attack_L2 || user.Attack_R2))
-                {
-                    user.Attack_L3 = true;
-                    animatorController.SetTrigger("Attack_L3");
-                }
-            }
-            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L1") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R1")) &&
-                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
-            {
-                if (!user.Attack_L2 && (user.Attack_L1 || user.Attack_R1))
-                {
-                    user.Attack_L2 = true;
-                    animatorController.SetTrigger("Attack_L2");
-                }
 
-            }
-            else
-            {
-                if (!user.Attack_L1 && !user.Attack_R1)
-                {
-                    user.Attack_L1 = true;
-                    animatorController.SetTrigger("Attack_L1");
-                }
-            }
 
-        }
-        //마우스 오른클릭
-        else if (Input.GetMouseButton(1))
-        {
-            if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L3") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R3")) &&
-                 animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
-            {
-                if (!user.Attack_R4 && (user.Attack_L3 || user.Attack_R3))
-                {
-                    user.Attack_R4 = true;
-                    animatorController.SetTrigger("Attack_R4");
-                }
-            }
-            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L2") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R2")) &&
-                animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.8f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.3f)
-            {
-                if (!user.Attack_R3 && (user.Attack_L2 || user.Attack_R2))
-                {
 
-                    user.Attack_R3 = true;
-                    animatorController.SetTrigger("Attack_R3");
-                }
-            }
-            else if ((animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_L1") || animatorController.GetCurrentAnimatorStateInfo(0).IsName("Attack_R1")) &&
-
-                (animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime < 0.6f && animatorController.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.5f))
-            {
-                if (!user.Attack_R2 && (user.Attack_L1 || user.Attack_R1))
-                {
-                    user.Attack_R2 = true;
-                    animatorController.SetTrigger("Attack_R2");
-                }
-            }
-            else
-            {
-                if (!user.Attack_L1 && !user.Attack_R1)
-                {
-                    user.Attack_R1 = true;
-                    animatorController.SetTrigger("Attack_R1");
-                }
-            }
-
-        }
     }
     private void Movement_Input()
     {
