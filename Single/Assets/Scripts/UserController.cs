@@ -178,14 +178,6 @@ public class UserController : MonoBehaviour
                 user.currentWeapon = user.haveWeapon_2;
             }
         }
-        else
-        {
-            
-        }
-
-
-
-
     }
     private void Movement_Input()
     {

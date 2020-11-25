@@ -31,8 +31,8 @@ public class User : Unit
     }
     void Start()
     {
-        haveWeapon_1 = USER_WEAPON.BAREHANDS;
-        haveWeapon_2 = USER_WEAPON.BAREHANDS;
+        //haveWeapon_1 = USER_WEAPON.BAREHANDS;
+        //haveWeapon_2 = USER_WEAPON.BAREHANDS;
         colliders = new Collider[10];
         Control = GetComponent<UserController>();
         currentWeapon = USER_WEAPON.BAREHANDS;

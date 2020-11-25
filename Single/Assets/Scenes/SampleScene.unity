@@ -747,7 +747,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   currentWeapon: 0
-  haveWeapon_1: 0
+  haveWeapon_1: 1
   haveWeapon_2: 0
   Attack_L1: 0
   Attack_L2: 0
