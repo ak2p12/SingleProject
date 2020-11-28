@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TwoHandSword : Item
+public class DualSword : Item
 {
     bool updown;
     float vertical;
@@ -21,7 +21,6 @@ public class TwoHandSword : Item
         targetCollider = new Collider[1];
         StartCoroutine(UpDate_Coroutine());
     }
-   
     IEnumerator UpDate_Coroutine()
     {
         while (true)
@@ -39,27 +38,29 @@ public class TwoHandSword : Item
                 //해당 캐릭터 1번장비가 없다면
                 if (USER_WEAPON.BAREHANDS == targetCollider[0].transform.GetComponent<User>().haveWeapon_1)
                 {
-                    targetCollider[0].transform.GetComponent<User>().haveWeapon_1 = USER_WEAPON.TWOHANDSWORD;
-                    foreach(GameObject _weapon in targetCollider[0].transform.GetComponent<User>().shoulderWeaponObject)
+                    targetCollider[0].transform.GetComponent<User>().haveWeapon_1 = USER_WEAPON.DUALSWORD;
+                    foreach (GameObject _weapon in targetCollider[0].transform.GetComponent<User>().shoulderWeaponObject)
                     {
-                        if (_weapon.name == "Equipment_Shoulder_2HandSword")
-                        {
+                        if (null == _weapon)
+                            continue;
+                        if (_weapon.name == "Equipment_Shoulder_L_DualSword")
                             _weapon.SetActive(true);
-                            break;
-                        }
+                        else if (_weapon.name == "Equipment_Shoulder_R_DualSword")
+                            _weapon.SetActive(true);
                     }
                 }
                 //해당 캐릭터 2번장비가 없다면
                 else if (USER_WEAPON.BAREHANDS == targetCollider[0].transform.GetComponent<User>().haveWeapon_2)
                 {
-                    targetCollider[0].transform.GetComponent<User>().haveWeapon_2 = USER_WEAPON.TWOHANDSWORD;
+                    targetCollider[0].transform.GetComponent<User>().haveWeapon_2 = USER_WEAPON.DUALSWORD;
                     foreach (GameObject _weapon in targetCollider[0].transform.GetComponent<User>().hipWeaponObject)
                     {
-                        if (_weapon.name == "Equipment_Hip_2HandSword")
-                        {
+                        if (null == _weapon)
+                            continue;
+                        if (_weapon.name == "Equipment_Hip_L_DualSword")
                             _weapon.SetActive(true);
-                            break;
-                        }
+                        else if (_weapon.name == "Equipment_Hip_R_DualSword")
+                            _weapon.SetActive(true);
                     }
                 }
 
@@ -71,7 +72,7 @@ public class TwoHandSword : Item
     }
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position , 1.0f);
+        Gizmos.DrawWireSphere(transform.position, 1.0f);
     }
     void Spine()
     {

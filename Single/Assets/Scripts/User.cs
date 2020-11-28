@@ -11,6 +11,9 @@ public class User : Unit
     public USER_WEAPON currentWeapon;
     public USER_WEAPON haveWeapon_1;
     public USER_WEAPON haveWeapon_2;
+    public GameObject[] shoulderWeaponObject;
+    public GameObject[] hipWeaponObject;
+    public GameObject[] useWeaponObject;
 
     [HideInInspector] public bool Attack_L1;
     [HideInInspector] public bool Attack_L2;
@@ -43,7 +46,6 @@ public class User : Unit
     {
         while (true)
         {
-            
             yield return null;
         }
     }
@@ -141,5 +143,104 @@ public class User : Unit
 
                 break;
         }
+    }
+
+    public void WeaponSwap(int _have)
+    {
+        if (1 == _have)
+        {
+            switch (haveWeapon_1)
+            {
+                case USER_WEAPON.BAREHANDS:
+                    break;
+                case USER_WEAPON.TWOHANDSWORD:
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_2HandSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    foreach (GameObject _gameObj in shoulderWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.DUALSWORD:
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_L_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else if("Use_R_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    foreach (GameObject _gameObj in shoulderWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.END:
+                    break;
+                
+            }
+
+
+        }
+        else if (2 == _have)
+        {
+            switch (haveWeapon_2)
+            {
+                case USER_WEAPON.BAREHANDS:
+                    break;
+                case USER_WEAPON.TWOHANDSWORD:
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_2HandSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    foreach (GameObject _gameObj in hipWeaponObject)
+                    {
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.DUALSWORD:
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_L_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else if ("Use_R_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    foreach (GameObject _gameObj in hipWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.END:
+                    break;
+
+            }
+        }
+
     }
 }

@@ -14,6 +14,7 @@ public enum USER_WEAPON
 {
     BAREHANDS,
     TWOHANDSWORD,
+    DUALSWORD,
     END
 }
 

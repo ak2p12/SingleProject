@@ -59,6 +59,7 @@ public class UserController : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 animatorController.SetTrigger("Roll_Trigger");
+                return;
             }
 
             //마우스 왼클릭
@@ -100,6 +101,7 @@ public class UserController : MonoBehaviour
                         animatorController.SetTrigger("Attack_L1");
                     }
                 }
+                return;
 
             }
             //마우스 오른클릭
@@ -142,34 +144,50 @@ public class UserController : MonoBehaviour
                         animatorController.SetTrigger("Attack_R1");
                     }
                 }
+                return;
 
             }
 
             //1번 장비
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
+                //들고있는 장비와 바꿀려고 하는 장비가 같으면 통과
+                if (user.currentWeapon == user.haveWeapon_1)
+                    return;
                 switch (user.haveWeapon_1)
                 {
                     case USER_WEAPON.BAREHANDS:
                         break;
                     case USER_WEAPON.TWOHANDSWORD:
                         animatorController.SetTrigger("2HandSword_Swith_Back");
-                        animatorController.SetInteger("UseWeapon" , (int)user.haveWeapon_1 );
+                        animatorController.SetInteger("UseWeapon", (int)user.haveWeapon_1);
+                        break;
+                    case USER_WEAPON.DUALSWORD:
+                        animatorController.SetTrigger("DualSword_Swith_Back");
+                        animatorController.SetInteger("UseWeapon", (int)user.haveWeapon_1);
                         break;
                     case USER_WEAPON.END:
                         break;
+                    
                 }
 
                 user.currentWeapon = user.haveWeapon_1;
             }
             else if (Input.GetKeyDown(KeyCode.Alpha2))
             {
+                //들고있는 장비와 바꿀려고 하는 장비가 같으면 통과
+                if (user.currentWeapon == user.haveWeapon_2)
+                    return;
                 switch (user.haveWeapon_2)
                 {
                     case USER_WEAPON.BAREHANDS:
                         break;
                     case USER_WEAPON.TWOHANDSWORD:
                         animatorController.SetTrigger("2HandSword_Swith_Hips");
+                        animatorController.SetInteger("UseWeapon", (int)user.haveWeapon_2);
+                        break;
+                    case USER_WEAPON.DUALSWORD:
+                        animatorController.SetTrigger("DualSword_Swith_Hips");
                         animatorController.SetInteger("UseWeapon", (int)user.haveWeapon_2);
                         break;
                     case USER_WEAPON.END:
@@ -895,17 +913,5 @@ public class UserController : MonoBehaviour
     public void RollEnd()
     {
         rollCheck = false;
-    }
-    public void UseWeaponAnimationReset(USER_WEAPON _useWeapon)
-    {
-        switch (_useWeapon)
-        {
-            case USER_WEAPON.BAREHANDS:
-                break;
-            case USER_WEAPON.TWOHANDSWORD:
-                break;
-            case USER_WEAPON.END:
-                break;
-        }
     }
 }
