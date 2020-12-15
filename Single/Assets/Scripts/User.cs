@@ -147,6 +147,7 @@ public class User : Unit
 
     public void WeaponSwap(int _have)
     {
+        //등에 있는 무기
         if (1 == _have)
         {
             switch (haveWeapon_1)
@@ -154,6 +155,7 @@ public class User : Unit
                 case USER_WEAPON.BAREHANDS:
                     break;
                 case USER_WEAPON.TWOHANDSWORD:
+                    //손에 들려고 하는 무기로 바꾸기
                     foreach (GameObject _gameObj in useWeaponObject)
                     {
                         if (null == _gameObj)
@@ -163,6 +165,7 @@ public class User : Unit
                         else
                             _gameObj.SetActive(false);
                     }
+                    //등에 있는 무기 안보이게 하기
                     foreach (GameObject _gameObj in shoulderWeaponObject)
                     {
                         if (null == _gameObj)
@@ -171,6 +174,7 @@ public class User : Unit
                     }
                     break;
                 case USER_WEAPON.DUALSWORD:
+                    //손에 들려고 하는 무기로 바꾸기
                     foreach (GameObject _gameObj in useWeaponObject)
                     {
                         if (null == _gameObj)
@@ -182,6 +186,7 @@ public class User : Unit
                         else
                             _gameObj.SetActive(false);
                     }
+                    //등에 있는 무기 안보이게 하기
                     foreach (GameObject _gameObj in shoulderWeaponObject)
                     {
                         if (null == _gameObj)
@@ -193,9 +198,8 @@ public class User : Unit
                     break;
                 
             }
-
-
         }
+        //허리에 있는 무기
         else if (2 == _have)
         {
             switch (haveWeapon_2)
@@ -203,6 +207,7 @@ public class User : Unit
                 case USER_WEAPON.BAREHANDS:
                     break;
                 case USER_WEAPON.TWOHANDSWORD:
+                    //손에 들려고 하는 무기로 바꾸기
                     foreach (GameObject _gameObj in useWeaponObject)
                     {
                         if (null == _gameObj)
@@ -212,12 +217,14 @@ public class User : Unit
                         else
                             _gameObj.SetActive(false);
                     }
+                    //허리에 있는 무기 안보이게 하기
                     foreach (GameObject _gameObj in hipWeaponObject)
                     {
                         _gameObj.SetActive(false);
                     }
                     break;
                 case USER_WEAPON.DUALSWORD:
+                    //손에 들려고 하는 무기로 바꾸기
                     foreach (GameObject _gameObj in useWeaponObject)
                     {
                         if (null == _gameObj)
@@ -229,6 +236,7 @@ public class User : Unit
                         else
                             _gameObj.SetActive(false);
                     }
+                    //허리에 있는 무기 안보이게 하기
                     foreach (GameObject _gameObj in hipWeaponObject)
                     {
                         if (null == _gameObj)
@@ -242,5 +250,109 @@ public class User : Unit
             }
         }
 
+    }
+    public void UseWeaponPut(int _use)
+    {
+        //손에 들고있는 무기 안보이게 하기
+        foreach (GameObject _gameObj in useWeaponObject)
+        {
+            if (null == _gameObj)
+                continue;
+            else
+                _gameObj.SetActive(false);
+        }
+
+        //등에 있는 무기
+        if (1 == _use)
+        {
+            switch (haveWeapon_1)
+            {
+                case USER_WEAPON.BAREHANDS:
+                    break;
+                case USER_WEAPON.TWOHANDSWORD:
+                    //등에 있는 무기 바꾸기
+                    foreach (GameObject _gameObj in shoulderWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.DUALSWORD:
+                    //손에 들고있는 무기 바꾸기
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_L_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else if ("Use_R_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    //등에 있는 무기 바꾸기
+                    foreach (GameObject _gameObj in shoulderWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.END:
+                    break;
+
+            }
+        }
+        //허리에 있는 무기
+        else if (2 == _use)
+        {
+            switch (haveWeapon_2)
+            {
+                case USER_WEAPON.BAREHANDS:
+                    break;
+                case USER_WEAPON.TWOHANDSWORD:
+                    //손에 들고있는 무기 바꾸기
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_2HandSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    //허리에 달려있는 무기 바꾸기
+                    foreach (GameObject _gameObj in hipWeaponObject)
+                    {
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.DUALSWORD:
+                    //손에 들고있는 무기 바꾸기
+                    foreach (GameObject _gameObj in useWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        else if ("Use_L_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else if ("Use_R_DualSword" == _gameObj.name)
+                            _gameObj.SetActive(true);
+                        else
+                            _gameObj.SetActive(false);
+                    }
+                    //허리에 달려있는 무기 바꾸기
+                    foreach (GameObject _gameObj in hipWeaponObject)
+                    {
+                        if (null == _gameObj)
+                            continue;
+                        _gameObj.SetActive(false);
+                    }
+                    break;
+                case USER_WEAPON.END:
+                    break;
+
+            }
+        }
     }
 }

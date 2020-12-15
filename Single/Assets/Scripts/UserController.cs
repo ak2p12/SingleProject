@@ -161,6 +161,8 @@ public class UserController : MonoBehaviour
                     case USER_WEAPON.TWOHANDSWORD:
                         animatorController.SetTrigger("2HandSword_Swith_Back");
                         animatorController.SetInteger("UseWeapon", (int)user.haveWeapon_1);
+                        //여기에서 들고있는 장비는 집어넣기
+                        ///////////////////////////
                         break;
                     case USER_WEAPON.DUALSWORD:
                         animatorController.SetTrigger("DualSword_Swith_Back");
