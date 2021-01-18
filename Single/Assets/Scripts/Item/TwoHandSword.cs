@@ -19,10 +19,10 @@ public class TwoHandSword : Item
     {
         targetLayer = 1 << LayerMask.NameToLayer("User");
         targetCollider = new Collider[1];
-        StartCoroutine(UpDate_Coroutine());
+        StartCoroutine(Update_Coroutine());
     }
    
-    IEnumerator UpDate_Coroutine()
+    IEnumerator Update_Coroutine()
     {
         while (true)
         {
